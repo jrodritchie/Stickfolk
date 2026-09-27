@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Stickfolk</title>
 
 <style>
@@ -173,30 +172,27 @@ h1 {
     font-size: 70px;
 }
 
-/* COOP */
+/* CHICKEN COOP */
 
 .coop {
     position: absolute;
     left: 70%;
     bottom: 20px;
     font-size: 75px;
-    display: none;
 }
 
-/* MESSAGE */
+/* COOP PANEL */
 
-#message {
+#coopPanel {
     background: white;
     padding: 12px;
     font-size: 18px;
 }
 
-/* BUTTON */
-
 button {
-    margin: 8px;
+    margin: 6px;
     padding: 12px 18px;
-    font-size: 18px;
+    font-size: 17px;
     border: none;
     border-radius: 10px;
     background: #6b8e23;
@@ -205,6 +201,12 @@ button {
 
 button:disabled {
     background: #999;
+}
+
+#message {
+    background: white;
+    padding: 12px;
+    font-size: 18px;
 }
 
 </style>
@@ -225,6 +227,10 @@ button:disabled {
 &nbsp;&nbsp;
 
 🐟 Food: <span id="food">0</span>
+
+&nbsp;&nbsp;
+
+🥚 Eggs: <span id="eggs">0</span>
 
 </div>
 
@@ -272,9 +278,29 @@ button:disabled {
 
 <div class="house">🏠</div>
 
-<!-- CHICKEN COOP -->
+<!-- COOP -->
 
 <div class="coop" id="coop">🐔🏠</div>
+
+</div>
+
+<div id="coopPanel">
+
+🐔 Chicken Coop
+
+<br>
+
+Chicken: <span id="chickenStatus">1 chicken</span>
+
+<br>
+
+Status: <span id="coopStatus">Needs food</span>
+
+<br>
+
+<button id="feedButton" onclick="feedChicken()">
+🌾 Feed Chicken (5 Food)
+</button>
 
 </div>
 
@@ -282,17 +308,16 @@ button:disabled {
 Welcome to your new village!
 </div>
 
-<button id="buildButton" onclick="buildCoop()">
-🐔 Build Chicken Coop
-</button>
-
 <script>
 
 let wood = 0;
 let stone = 0;
 let food = 0;
+let eggs = 0;
 
-let coopBuilt = false;
+let chickenFed = false;
+let productionReady = false;
+let productionTimer = null;
 
 const villager =
 document.getElementById("stickman");
@@ -300,44 +325,41 @@ document.getElementById("stickman");
 function updateResources() {
 
 document.getElementById("wood").textContent = wood;
-
 document.getElementById("stone").textContent = stone;
-
 document.getElementById("food").textContent = food;
+document.getElementById("eggs").textContent = eggs;
 
-updateBuildButton();
+updateFeedButton();
 
 }
 
-function updateBuildButton() {
+function updateFeedButton() {
 
 const button =
-document.getElementById("buildButton");
+document.getElementById("feedButton");
 
-if (coopBuilt) {
-
-button.textContent =
-"🐔 Chicken Coop Built!";
+if (chickenFed) {
 
 button.disabled = true;
 
-return;
-
-}
-
-if (wood >= 20 && stone >= 10) {
-
-button.disabled = false;
+if (productionReady) {
 
 button.textContent =
-"🐔 Build Chicken Coop";
+"🥚 Collect Eggs";
 
 } else {
 
-button.disabled = true;
+button.textContent =
+"🐔 Producing Eggs...";
+
+}
+
+} else {
+
+button.disabled = food < 5;
 
 button.textContent =
-"🐔 Coop: 20 Wood + 10 Stone";
+"🌾 Feed Chicken (5 Food)";
 
 }
 
@@ -442,29 +464,85 @@ fish.style.visibility =
 
 }
 
-/* CHICKEN COOP */
+/* CHICKEN */
 
-function buildCoop() {
+function feedChicken() {
 
-if (wood < 20 || stone < 10) {
+if (!chickenFed && food >= 5) {
 
-return;
+food -= 5;
+
+chickenFed = true;
+productionReady = false;
+
+document.getElementById("coopStatus").textContent =
+"Producing eggs... 4:00";
+
+document.getElementById("message").textContent =
+"🐔 The chicken has been fed!";
+
+updateResources();
+
+let seconds = 240;
+
+productionTimer =
+setInterval(function() {
+
+seconds--;
+
+let minutes =
+Math.floor(seconds / 60);
+
+let remainingSeconds =
+seconds % 60;
+
+let displaySeconds =
+remainingSeconds < 10
+? "0" + remainingSeconds
+: remainingSeconds;
+
+document.getElementById("coopStatus").textContent =
+"Producing eggs... "
++ minutes + ":"
++ displaySeconds;
+
+if (seconds <= 0) {
+
+clearInterval(productionTimer);
+
+productionReady = true;
+
+document.getElementById("coopStatus").textContent =
+"🥚 Eggs are ready!";
+
+document.getElementById("feedButton").disabled =
+false;
+
+document.getElementById("feedButton").textContent =
+"🥚 Collect Eggs";
 
 }
 
-wood -= 20;
+},1000);
 
-stone -= 10;
+}
 
-coopBuilt = true;
+else if (chickenFed && productionReady) {
 
-document.getElementById("coop").style.display =
-"block";
+eggs += 3;
+
+chickenFed = false;
+productionReady = false;
+
+document.getElementById("coopStatus").textContent =
+"Needs food";
 
 document.getElementById("message").textContent =
-"🐔 You built a Chicken Coop!";
+"🥚 You collected 3 eggs!";
 
 updateResources();
+
+}
 
 }
 
@@ -473,4 +551,4 @@ updateResources();
 </script>
 
 </body>
-</html>
+    </html>
