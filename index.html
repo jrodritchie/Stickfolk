@@ -233,6 +233,12 @@ button:disabled {
     background: #999;
 }
 
+.jobButton {
+    display: block;
+    margin: 8px auto;
+    width: 260px;
+}
+
 #message {
     background: white;
     padding: 12px;
@@ -435,6 +441,46 @@ Status:
 
 </div>
 
+<!-- JOBS -->
+
+<div class="panel">
+
+👷 <b>Villager Jobs</b>
+
+<br>
+
+<span id="jobStatus">
+No extra villager available.
+</span>
+
+<br>
+
+<button class="jobButton"
+id="woodJob"
+onclick="assignJob('Woodcutter')">
+
+🪓 Assign Woodcutter
+
+</button>
+
+<button class="jobButton"
+id="stoneJob"
+onclick="assignJob('Miner')">
+
+⛏️ Assign Miner
+
+</button>
+
+<button class="jobButton"
+id="foodJob"
+onclick="assignJob('Fisher')">
+
+🎣 Assign Fisher
+
+</button>
+
+</div>
+
 <div id="message">
 Welcome to your new village!
 </div>
@@ -453,6 +499,8 @@ let population = 1;
 let chickenFed = false;
 let productionReady = false;
 let hutBuilt = false;
+
+let villagerJob = "None";
 
 let productionTimer = null;
 
@@ -473,6 +521,7 @@ document.getElementById("population").textContent = population;
 
 updateFeedButton();
 updateHutButton();
+updateJobButtons();
 
 }
 
@@ -527,7 +576,7 @@ document.getElementById("message").textContent =
 
 updateResources();
 
-/* TEST TIMER: 20 SECONDS */
+/* TEST TIMER */
 
 let seconds = 20;
 
@@ -739,6 +788,7 @@ document.getElementById("buildHutButton");
 if (hutBuilt) {
 
 button.disabled = true;
+
 button.textContent =
 "🛖 Hut Built!";
 
@@ -775,8 +825,109 @@ document.getElementById("stickman2").style.display =
 document.getElementById("hutStatus").textContent =
 "👥 A new villager joined!";
 
+document.getElementById("jobStatus").textContent =
+"Your new villager is unemployed.";
+
 document.getElementById("message").textContent =
 "🎉 A new Stickfolk has joined your village!";
+
+updateResources();
+
+}
+
+/* JOBS */
+
+function updateJobButtons() {
+
+const buttons = [
+document.getElementById("woodJob"),
+document.getElementById("stoneJob"),
+document.getElementById("foodJob")
+];
+
+if (population < 2) {
+
+buttons.forEach(function(button) {
+button.disabled = true;
+});
+
+return;
+
+}
+
+buttons.forEach(function(button) {
+button.disabled = false;
+});
+
+if (villagerJob === "Woodcutter") {
+
+document.getElementById("woodJob").textContent =
+"🪓 Woodcutter Assigned ✓";
+
+document.getElementById("stoneJob").textContent =
+"⛏️ Assign Miner";
+
+document.getElementById("foodJob").textContent =
+"🎣 Assign Fisher";
+
+}
+
+else if (villagerJob === "Miner") {
+
+document.getElementById("woodJob").textContent =
+"🪓 Assign Woodcutter";
+
+document.getElementById("stoneJob").textContent =
+"⛏️ Miner Assigned ✓";
+
+document.getElementById("foodJob").textContent =
+"🎣 Assign Fisher";
+
+}
+
+else if (villagerJob === "Fisher") {
+
+document.getElementById("woodJob").textContent =
+"🪓 Assign Woodcutter";
+
+document.getElementById("stoneJob").textContent =
+"⛏️ Assign Miner";
+
+document.getElementById("foodJob").textContent =
+"🎣 Fisher Assigned ✓";
+
+}
+
+else {
+
+document.getElementById("woodJob").textContent =
+"🪓 Assign Woodcutter";
+
+document.getElementById("stoneJob").textContent =
+"⛏️ Assign Miner";
+
+document.getElementById("foodJob").textContent =
+"🎣 Assign Fisher";
+
+}
+
+}
+
+/* ASSIGN JOB */
+
+function assignJob(job) {
+
+if (population < 2) {
+return;
+}
+
+villagerJob = job;
+
+document.getElementById("jobStatus").textContent =
+"👷 Villager is now a " + job + ".";
+
+document.getElementById("message").textContent =
+"👷 Your Stickfolk is now working as a " + job + "!";
 
 updateResources();
 
@@ -787,4 +938,4 @@ updateResources();
 </script>
 
 </body>
-</html>
+    </html>
