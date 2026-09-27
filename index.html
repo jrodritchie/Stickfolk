@@ -24,7 +24,7 @@ h1 {
 .info {
     background: white;
     padding: 15px;
-    font-size: 18px;
+    font-size: 17px;
 }
 
 #game {
@@ -41,10 +41,10 @@ h1 {
     cursor: pointer;
 }
 
-.tree1 { left: 10%; top: 40px; }
-.tree2 { right: 10%; top: 40px; }
-.tree3 { left: 15%; bottom: 90px; }
-.tree4 { right: 15%; bottom: 90px; }
+.tree1 { left: 8%; top: 35px; }
+.tree2 { right: 8%; top: 35px; }
+.tree3 { left: 13%; bottom: 90px; }
+.tree4 { right: 13%; bottom: 90px; }
 
 /* ROCKS */
 
@@ -54,17 +54,17 @@ h1 {
     cursor: pointer;
 }
 
-.rock1 { left: 32%; top: 75px; }
-.rock2 { right: 32%; top: 75px; }
-.rock3 { left: 35%; bottom: 75px; }
-.rock4 { right: 35%; bottom: 75px; }
+.rock1 { left: 30%; top: 70px; }
+.rock2 { right: 30%; top: 70px; }
+.rock3 { left: 33%; bottom: 70px; }
+.rock4 { right: 33%; bottom: 70px; }
 
 /* POND */
 
 .pond {
     position: absolute;
     left: 50%;
-    top: 195px;
+    top: 190px;
     transform: translateX(-50%);
     width: 150px;
     height: 70px;
@@ -82,13 +82,13 @@ h1 {
 }
 
 .fish1 {
-    left: 5%;
-    top: 210px;
+    left: 4%;
+    top: 205px;
 }
 
 .fish2 {
-    right: 5%;
-    top: 210px;
+    right: 4%;
+    top: 205px;
 }
 
 /* STICKFOLK */
@@ -96,7 +96,7 @@ h1 {
 .stickman {
     position: absolute;
     left: 50%;
-    top: 165px;
+    top: 160px;
     width: 80px;
     height: 160px;
     transform: translateX(-50%);
@@ -162,7 +162,7 @@ h1 {
     transform: rotate(65deg);
 }
 
-/* HOUSE */
+/* BUILDINGS */
 
 .house {
     position: absolute;
@@ -172,27 +172,33 @@ h1 {
     font-size: 70px;
 }
 
-/* CHICKEN COOP */
-
 .coop {
     position: absolute;
-    left: 70%;
-    bottom: 20px;
-    font-size: 75px;
+    left: 72%;
+    bottom: 25px;
+    font-size: 65px;
 }
 
-/* COOP PANEL */
+.kitchen {
+    position: absolute;
+    left: 28%;
+    bottom: 25px;
+    font-size: 65px;
+    display: none;
+}
 
-#coopPanel {
+/* PANELS */
+
+.panel {
     background: white;
-    padding: 12px;
-    font-size: 18px;
+    padding: 10px;
+    font-size: 17px;
 }
 
 button {
     margin: 6px;
-    padding: 12px 18px;
-    font-size: 17px;
+    padding: 11px 16px;
+    font-size: 16px;
     border: none;
     border-radius: 10px;
     background: #6b8e23;
@@ -232,23 +238,27 @@ button:disabled {
 
 🥚 Eggs: <span id="eggs">0</span>
 
+&nbsp;&nbsp;
+
+🍽️ Prepared: <span id="prepared">0</span>
+
 </div>
 
 <div id="game">
 
 <!-- TREES -->
 
-<div class="tree tree1" onclick="chopTree(this,10)">🌲</div>
-<div class="tree tree2" onclick="chopTree(this,90)">🌲</div>
-<div class="tree tree3" onclick="chopTree(this,15)">🌲</div>
-<div class="tree tree4" onclick="chopTree(this,85)">🌲</div>
+<div class="tree tree1" onclick="chopTree(this,8)">🌲</div>
+<div class="tree tree2" onclick="chopTree(this,92)">🌲</div>
+<div class="tree tree3" onclick="chopTree(this,13)">🌲</div>
+<div class="tree tree4" onclick="chopTree(this,87)">🌲</div>
 
 <!-- ROCKS -->
 
-<div class="rock rock1" onclick="mineRock(this,32)">🪨</div>
-<div class="rock rock2" onclick="mineRock(this,68)">🪨</div>
-<div class="rock rock3" onclick="mineRock(this,35)">🪨</div>
-<div class="rock rock4" onclick="mineRock(this,65)">🪨</div>
+<div class="rock rock1" onclick="mineRock(this,30)">🪨</div>
+<div class="rock rock2" onclick="mineRock(this,70)">🪨</div>
+<div class="rock rock3" onclick="mineRock(this,33)">🪨</div>
+<div class="rock rock4" onclick="mineRock(this,67)">🪨</div>
 
 <!-- POND -->
 
@@ -256,8 +266,8 @@ button:disabled {
 
 <!-- FISH -->
 
-<div class="fish fish1" onclick="gatherFish(this,8)">🐟</div>
-<div class="fish fish2" onclick="gatherFish(this,92)">🐟</div>
+<div class="fish fish1" onclick="gatherFish(this,7)">🐟</div>
+<div class="fish fish2" onclick="gatherFish(this,93)">🐟</div>
 
 <!-- STICKFOLK -->
 
@@ -274,32 +284,69 @@ button:disabled {
 
 </div>
 
-<!-- HOUSE -->
+<!-- STARTER HOUSE -->
 
 <div class="house">🏠</div>
 
-<!-- COOP -->
+<!-- CHICKEN COOP -->
 
 <div class="coop" id="coop">🐔🏠</div>
 
+<!-- COMMUNITY KITCHEN -->
+
+<div class="kitchen" id="kitchen">🍳🏠</div>
+
 </div>
 
-<div id="coopPanel">
+<!-- CHICKEN PANEL -->
 
-🐔 Chicken Coop
+<div class="panel">
 
-<br>
-
-Chicken: <span id="chickenStatus">1 chicken</span>
+🐔 <b>Chicken Coop</b>
 
 <br>
 
-Status: <span id="coopStatus">Needs food</span>
+Chicken: 1
+
+<br>
+
+Status:
+<span id="coopStatus">Needs food</span>
 
 <br>
 
 <button id="feedButton" onclick="feedChicken()">
 🌾 Feed Chicken (5 Food)
+</button>
+
+</div>
+
+<!-- KITCHEN PANEL -->
+
+<div class="panel">
+
+🍳 <b>Community Kitchen</b>
+
+<br>
+
+Status:
+<span id="kitchenStatus">Not built</span>
+
+<br>
+
+<button id="buildKitchenButton"
+onclick="buildKitchen()">
+
+🍳 Build Kitchen
+
+</button>
+
+<button id="cookButton"
+onclick="cookFood()"
+disabled>
+
+🍳 Cook 5 Eggs → 5 Food
+
 </button>
 
 </div>
@@ -314,9 +361,12 @@ let wood = 0;
 let stone = 0;
 let food = 0;
 let eggs = 0;
+let prepared = 0;
 
 let chickenFed = false;
 let productionReady = false;
+let kitchenBuilt = false;
+
 let productionTimer = null;
 
 const villager =
@@ -328,10 +378,14 @@ document.getElementById("wood").textContent = wood;
 document.getElementById("stone").textContent = stone;
 document.getElementById("food").textContent = food;
 document.getElementById("eggs").textContent = eggs;
+document.getElementById("prepared").textContent = prepared;
 
 updateFeedButton();
+updateKitchenButtons();
 
 }
+
+/* CHICKEN BUTTON */
 
 function updateFeedButton() {
 
@@ -347,19 +401,58 @@ if (productionReady) {
 button.textContent =
 "🥚 Collect Eggs";
 
-} else {
+button.disabled = false;
+
+}
+
+else {
 
 button.textContent =
 "🐔 Producing Eggs...";
 
 }
 
-} else {
+}
+
+else {
 
 button.disabled = food < 5;
 
 button.textContent =
 "🌾 Feed Chicken (5 Food)";
+
+}
+
+}
+
+/* KITCHEN BUTTONS */
+
+function updateKitchenButtons() {
+
+const buildButton =
+document.getElementById("buildKitchenButton");
+
+const cookButton =
+document.getElementById("cookButton");
+
+if (!kitchenBuilt) {
+
+buildButton.disabled =
+wood < 30 || stone < 15;
+
+cookButton.disabled = true;
+
+}
+
+else {
+
+buildButton.disabled = true;
+
+buildButton.textContent =
+"🍳 Kitchen Built!";
+
+cookButton.disabled =
+eggs < 5;
 
 }
 
@@ -431,7 +524,7 @@ rock.style.visibility =
 
 }
 
-/* FOOD */
+/* FISH */
 
 function gatherFish(fish, position) {
 
@@ -515,11 +608,7 @@ productionReady = true;
 document.getElementById("coopStatus").textContent =
 "🥚 Eggs are ready!";
 
-document.getElementById("feedButton").disabled =
-false;
-
-document.getElementById("feedButton").textContent =
-"🥚 Collect Eggs";
+updateResources();
 
 }
 
@@ -543,6 +632,58 @@ document.getElementById("message").textContent =
 updateResources();
 
 }
+
+}
+
+/* BUILD KITCHEN */
+
+function buildKitchen() {
+
+if (wood < 30 || stone < 15) {
+
+return;
+
+}
+
+wood -= 30;
+stone -= 15;
+
+kitchenBuilt = true;
+
+document.getElementById("kitchen").style.display =
+"block";
+
+document.getElementById("kitchenStatus").textContent =
+"Ready to cook!";
+
+document.getElementById("message").textContent =
+"🍳 You built the Community Kitchen!";
+
+updateResources();
+
+}
+
+/* COOK FOOD */
+
+function cookFood() {
+
+if (!kitchenBuilt || eggs < 5) {
+
+return;
+
+}
+
+eggs -= 5;
+
+prepared += 5;
+
+document.getElementById("kitchenStatus").textContent =
+"🍽️ Food prepared!";
+
+document.getElementById("message").textContent =
+"🍳 The Community Kitchen prepared 5 food!";
+
+updateResources();
 
 }
 
