@@ -103,6 +103,14 @@ h1 {
     transition: left 1s, top 1s;
 }
 
+.stickman2 {
+    position: absolute;
+    left: 55%;
+    top: 160px;
+    width: 80px;
+    height: 160px;
+}
+
 .head {
     position: absolute;
     left: 25px;
@@ -191,6 +199,13 @@ h1 {
     right: 5%;
     top: 145px;
     font-size: 65px;
+}
+
+.hut {
+    position: absolute;
+    left: 42%;
+    bottom: 25px;
+    font-size: 60px;
     display: none;
 }
 
@@ -253,6 +268,10 @@ button:disabled {
 
 🪙 Coins: <span id="coins">0</span>
 
+<br><br>
+
+👥 Population: <span id="population">1</span>
+
 </div>
 
 <div id="game">
@@ -280,7 +299,7 @@ button:disabled {
 <div class="fish fish1" onclick="gatherFish(this,7)">🐟</div>
 <div class="fish fish2" onclick="gatherFish(this,93)">🐟</div>
 
-<!-- STICKFOLK -->
+<!-- FIRST STICKFOLK -->
 
 <div class="stickman" id="stickman">
 
@@ -293,22 +312,37 @@ button:disabled {
 
 </div>
 
-<!-- HOUSE -->
+<!-- SECOND STICKFOLK -->
+
+<div class="stickman2" id="stickman2" style="display:none;">
+
+<div class="head"></div>
+<div class="body"></div>
+<div class="arm-left"></div>
+<div class="arm-right"></div>
+<div class="leg-left"></div>
+<div class="leg-right"></div>
+
+</div>
+
+<!-- BUILDINGS -->
 
 <div class="house">🏠</div>
 
-<!-- CHICKEN COOP -->
+<div class="coop">
+🐔🏠
+</div>
 
-<div class="coop">🐔🏠</div>
+<div class="kitchen">
+🍳🏠
+</div>
 
-<!-- COMMUNITY KITCHEN -->
-
-<div class="kitchen">🍳🏠</div>
-
-<!-- MARKET -->
-
-<div class="market" id="market">
+<div class="market">
 🏪
+</div>
+
+<div class="hut" id="hut">
+🛖
 </div>
 
 </div>
@@ -350,7 +384,7 @@ Status:
 <br>
 
 <button id="cookButton"
-onclick="cookFood()">
+onclick="cookFood">
 
 🍳 Cook 5 Eggs → 5 Prepared Food
 
@@ -367,22 +401,36 @@ onclick="cookFood()">
 <br>
 
 Status:
-<span id="marketStatus">Not built</span>
+<span id="marketStatus">Ready for business!</span>
 
 <br>
 
-<button id="buildMarketButton"
-onclick="buildMarket()">
+<button id="sellButton"
+onclick="sellFood()">
 
-🏪 Build Market Stall
+🍽️ Sell 5 Prepared Food → 10 Coins
 
 </button>
 
-<button id="sellButton"
-onclick="sellFood()"
-disabled>
+</div>
 
-🍽️ Sell 5 Prepared Food → 10 Coins
+<!-- HUT -->
+
+<div class="panel">
+
+🛖 <b>Village Hut</b>
+
+<br>
+
+Status:
+<span id="hutStatus">Not built</span>
+
+<br>
+
+<button id="buildHutButton"
+onclick="buildHut()">
+
+🛖 Build Hut
 
 </button>
 
@@ -401,15 +449,18 @@ let eggs = 0;
 let prepared = 0;
 let coins = 0;
 
+let population = 1;
+
 let chickenFed = false;
 let productionReady = false;
-let kitchenBuilt = true;
-let marketBuilt = false;
+let hutBuilt = false;
 
 let productionTimer = null;
 
 const villager =
 document.getElementById("stickman");
+
+/* RESOURCES */
 
 function updateResources() {
 
@@ -419,10 +470,10 @@ document.getElementById("food").textContent = food;
 document.getElementById("eggs").textContent = eggs;
 document.getElementById("prepared").textContent = prepared;
 document.getElementById("coins").textContent = coins;
+document.getElementById("population").textContent = population;
 
 updateFeedButton();
-updateKitchenButton();
-updateMarketButtons();
+updateHutButton();
 
 }
 
@@ -637,19 +688,9 @@ fish.style.visibility =
 
 /* KITCHEN */
 
-function updateKitchenButton() {
-
-const button =
-document.getElementById("cookButton");
-
-button.disabled =
-!kitchenBuilt || eggs < 5;
-
-}
-
 function cookFood() {
 
-if (!kitchenBuilt || eggs < 5) {
+if (eggs < 5) {
 return;
 }
 
@@ -668,68 +709,9 @@ updateResources();
 
 /* MARKET */
 
-function updateMarketButtons() {
-
-const buildButton =
-document.getElementById("buildMarketButton");
-
-const sellButton =
-document.getElementById("sellButton");
-
-if (!marketBuilt) {
-
-buildButton.disabled =
-wood < 20 || stone < 10;
-
-sellButton.disabled = true;
-
-}
-
-else {
-
-buildButton.disabled = true;
-
-buildButton.textContent =
-"🏪 Market Built!";
-
-sellButton.disabled =
-prepared < 5;
-
-}
-
-}
-
-/* BUILD MARKET */
-
-function buildMarket() {
-
-if (wood < 20 || stone < 10) {
-return;
-}
-
-wood -= 20;
-stone -= 10;
-
-marketBuilt = true;
-
-document.getElementById("market").style.display =
-"block";
-
-document.getElementById("marketStatus").textContent =
-"Ready for business!";
-
-document.getElementById("message").textContent =
-"🏪 You built a Market Stall!";
-
-updateResources();
-
-}
-
-/* SELL FOOD */
-
 function sellFood() {
 
-if (!marketBuilt || prepared < 5) {
+if (prepared < 5) {
 return;
 }
 
@@ -741,6 +723,59 @@ document.getElementById("marketStatus").textContent =
 
 document.getElementById("message").textContent =
 "🪙 You sold 5 prepared food for 10 coins!";
+
+updateResources();
+
+}
+
+/* HUT */
+
+function updateHutButton() {
+
+const button =
+document.getElementById("buildHutButton");
+
+if (hutBuilt) {
+
+button.disabled = true;
+button.textContent =
+"🛖 Hut Built!";
+
+return;
+
+}
+
+button.disabled =
+wood < 20 || stone < 10;
+
+}
+
+/* BUILD HUT */
+
+function buildHut() {
+
+if (wood < 20 || stone < 10) {
+return;
+}
+
+wood -= 20;
+stone -= 10;
+
+hutBuilt = true;
+
+population = 2;
+
+document.getElementById("hut").style.display =
+"block";
+
+document.getElementById("stickman2").style.display =
+"block";
+
+document.getElementById("hutStatus").textContent =
+"👥 A new villager joined!";
+
+document.getElementById("message").textContent =
+"🎉 A new Stickfolk has joined your village!";
 
 updateResources();
 
