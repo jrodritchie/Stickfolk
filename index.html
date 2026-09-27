@@ -20,15 +20,135 @@ h1 {
     padding: 20px;
 }
 
-.game {
-    padding: 40px;
-    font-size: 60px;
-}
-
 .info {
     background: white;
     padding: 15px;
     font-size: 22px;
+}
+
+/* GAME AREA */
+.game {
+    position: relative;
+    height: 500px;
+    padding-top: 30px;
+}
+
+/* STICKMAN */
+.stickman {
+    position: absolute;
+    left: 50%;
+    top: 120px;
+    width: 80px;
+    height: 160px;
+    transform: translateX(-50%);
+}
+
+/* HEAD */
+.head {
+    position: absolute;
+    left: 25px;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border: 5px solid #222;
+    border-radius: 50%;
+    background: #f5d6a0;
+}
+
+/* BODY */
+.body {
+    position: absolute;
+    left: 43px;
+    top: 45px;
+    width: 5px;
+    height: 65px;
+    background: #222;
+}
+
+/* ARMS */
+.arm-left,
+.arm-right {
+    position: absolute;
+    top: 55px;
+    width: 55px;
+    height: 5px;
+    background: #222;
+    transform-origin: left center;
+}
+
+.arm-left {
+    left: 43px;
+    transform: rotate(145deg);
+}
+
+.arm-right {
+    left: 43px;
+    transform: rotate(35deg);
+}
+
+/* LEGS */
+.leg-left,
+.leg-right {
+    position: absolute;
+    top: 105px;
+    left: 43px;
+    width: 65px;
+    height: 5px;
+    background: #222;
+    transform-origin: left center;
+}
+
+.leg-left {
+    transform: rotate(115deg);
+}
+
+.leg-right {
+    transform: rotate(65deg);
+}
+
+/* TREES */
+.tree {
+    position: absolute;
+    font-size: 65px;
+}
+
+.tree1 {
+    left: 15%;
+    top: 40px;
+}
+
+.tree2 {
+    right: 15%;
+    top: 40px;
+}
+
+.tree3 {
+    left: 20%;
+    bottom: 80px;
+}
+
+.tree4 {
+    right: 20%;
+    bottom: 80px;
+}
+
+/* HOUSE */
+.house {
+    position: absolute;
+    left: 50%;
+    bottom: 45px;
+    transform: translateX(-50%);
+    font-size: 90px;
+}
+
+/* BUTTON */
+button {
+    font-size: 20px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    background: #6b8e23;
+    color: white;
 }
 </style>
 </head>
@@ -38,14 +158,38 @@ h1 {
 <h1>🌳 STICKFOLK 🌳</h1>
 
 <div class="info">
-🪵 Wood: 0 &nbsp;&nbsp; 🪨 Stone: 0 &nbsp;&nbsp; 🐟 Food: 0
+🪵 Wood: 0 &nbsp;&nbsp;
+🪨 Stone: 0 &nbsp;&nbsp;
+🐟 Food: 0
 </div>
 
 <div class="game">
-🌲 &nbsp;&nbsp; 🧍 &nbsp;&nbsp; 🌲
-<br><br>
-🌲 &nbsp;&nbsp; 🏠 &nbsp;&nbsp; 🌲
+
+    <div class="tree tree1">🌲</div>
+    <div class="tree tree2">🌲</div>
+    <div class="tree tree3">🌲</div>
+    <div class="tree tree4">🌲</div>
+
+    <!-- OUR FIRST STICKFOLK -->
+    <div class="stickman">
+
+        <div class="head"></div>
+
+        <div class="body"></div>
+
+        <div class="arm-left"></div>
+        <div class="arm-right"></div>
+
+        <div class="leg-left"></div>
+        <div class="leg-right"></div>
+
+    </div>
+
+    <div class="house">🏠</div>
+
 </div>
 
+<button>🌱 Gather</button>
+
 </body>
-</html>
+        </html>
