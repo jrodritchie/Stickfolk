@@ -1595,11 +1595,50 @@ updateResources();
 
 }
 
-/* START */
+}
+
+/* LUMBER YARD */
+
+function updateLumberYardButtons(){
+    const buildButton=document.getElementById("buildLumberYardButton");
+    const processButton=document.getElementById("processLumberButton");
+
+    if(lumberyardBuilt){
+        buildButton.disabled=true;
+        buildButton.textContent="🪵 Lumber Yard Built!";
+        processButton.disabled=wood<10;
+    }else{
+        buildButton.disabled=wood<40||stone<25;
+        processButton.disabled=true;
+    }
+}
+
+function buildLumberYard(){
+    if(wood<40||stone<25)return;
+
+    wood-=40;
+    stone-=25;
+    lumberyardBuilt=true;
+
+    document.getElementById("lumberyard").style.display="block";
+    document.getElementById("lumberyardStatus").textContent="🪵 Lumber Yard is ready!";
+    document.getElementById("message").textContent="🪵 Your village built a Lumber Yard!";
+
+    updateResources();
+}
+
+function processLumber(){
+    if(!lumberyardBuilt||wood<10)return;
+
+    wood-=10;
+    lumber+=5;
+
+    document.getElementById("lumberyardStatus").textContent="🪵 5 lumber produced!";
+    document.getElementById("message").textContent="🪵 The Lumber Yard processed 10 wood into 5 lumber!";
+
+    updateResources();
+}
 
 updateResources();
 
 </script>
-
-</body>
-    </html>
