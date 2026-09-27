@@ -26,24 +26,55 @@ h1 {
     font-size: 22px;
 }
 
-/* GAME AREA */
-.game {
+#game {
     position: relative;
     height: 500px;
-    padding-top: 30px;
+    overflow: hidden;
 }
 
-/* STICKMAN */
+/* TREES */
+
+.tree {
+    position: absolute;
+    font-size: 65px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tree1 {
+    left: 15%;
+    top: 50px;
+}
+
+.tree2 {
+    right: 15%;
+    top: 50px;
+}
+
+.tree3 {
+    left: 20%;
+    bottom: 80px;
+}
+
+.tree4 {
+    right: 20%;
+    bottom: 80px;
+}
+
+/* STICKFOLK */
+
 .stickman {
     position: absolute;
     left: 50%;
-    top: 120px;
+    top: 170px;
     width: 80px;
     height: 160px;
     transform: translateX(-50%);
+    transition: left 1s;
 }
 
 /* HEAD */
+
 .head {
     position: absolute;
     left: 25px;
@@ -56,6 +87,7 @@ h1 {
 }
 
 /* BODY */
+
 .body {
     position: absolute;
     left: 43px;
@@ -66,6 +98,7 @@ h1 {
 }
 
 /* ARMS */
+
 .arm-left,
 .arm-right {
     position: absolute;
@@ -87,6 +120,7 @@ h1 {
 }
 
 /* LEGS */
+
 .leg-left,
 .leg-right {
     position: absolute;
@@ -106,49 +140,20 @@ h1 {
     transform: rotate(65deg);
 }
 
-/* TREES */
-.tree {
-    position: absolute;
-    font-size: 65px;
+/* MESSAGE */
+
+#message {
+    background: white;
+    padding: 12px;
+    font-size: 18px;
 }
 
-.tree1 {
-    left: 15%;
-    top: 40px;
-}
-
-.tree2 {
-    right: 15%;
-    top: 40px;
-}
-
-.tree3 {
-    left: 20%;
-    bottom: 80px;
-}
-
-.tree4 {
-    right: 20%;
-    bottom: 80px;
-}
-
-/* HOUSE */
 .house {
     position: absolute;
     left: 50%;
-    bottom: 45px;
+    bottom: 25px;
     transform: translateX(-50%);
-    font-size: 90px;
-}
-
-/* BUTTON */
-button {
-    font-size: 20px;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
-    background: #6b8e23;
-    color: white;
+    font-size: 80px;
 }
 </style>
 </head>
@@ -158,38 +163,83 @@ button {
 <h1>🌳 STICKFOLK 🌳</h1>
 
 <div class="info">
-🪵 Wood: 0 &nbsp;&nbsp;
-🪨 Stone: 0 &nbsp;&nbsp;
+🪵 Wood: <span id="wood">0</span>
+&nbsp;&nbsp;
+🪨 Stone: 0
+&nbsp;&nbsp;
 🐟 Food: 0
 </div>
 
-<div class="game">
+<div id="game">
 
-    <div class="tree tree1">🌲</div>
-    <div class="tree tree2">🌲</div>
-    <div class="tree tree3">🌲</div>
-    <div class="tree tree4">🌲</div>
+    <div class="tree tree1" onclick="chop(this, 15)">
+        🌲
+    </div>
 
-    <!-- OUR FIRST STICKFOLK -->
-    <div class="stickman">
+    <div class="tree tree2" onclick="chop(this, 75)">
+        🌲
+    </div>
 
+    <div class="tree tree3" onclick="chop(this, 20)">
+        🌲
+    </div>
+
+    <div class="tree tree4" onclick="chop(this, 75)">
+        🌲
+    </div>
+
+    <div class="stickman" id="stickman">
         <div class="head"></div>
-
         <div class="body"></div>
-
         <div class="arm-left"></div>
         <div class="arm-right"></div>
-
         <div class="leg-left"></div>
         <div class="leg-right"></div>
-
     </div>
 
     <div class="house">🏠</div>
 
 </div>
 
-<button>🌱 Gather</button>
+<div id="message">
+    Welcome to your new village!
+</div>
+
+<script>
+
+let wood = 0;
+
+function chop(tree, position) {
+
+    const villager = document.getElementById("stickman");
+
+    villager.style.left = position + "%";
+
+    document.getElementById("message").textContent =
+        "Your Stickfolk is chopping wood...";
+
+    setTimeout(function() {
+
+        wood += 5;
+
+        document.getElementById("wood").textContent = wood;
+
+        tree.style.visibility = "hidden";
+
+        document.getElementById("message").textContent =
+            "🪵 Your Stickfolk gathered 5 wood!";
+
+        setTimeout(function() {
+            tree.style.visibility = "visible";
+
+            document.getElementById("message").textContent =
+                "🌲 The tree has grown back!";
+        }, 5000);
+
+    }, 1000);
+}
+
+</script>
 
 </body>
-        </html>
+</html>
