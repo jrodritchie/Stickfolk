@@ -95,24 +95,30 @@ h1 {
 /* STICKFOLK */
 
 .stickman,
-.stickman2 {
+.stickman2,
+.stickman3 {
     position: absolute;
     width: 80px;
     height: 160px;
+    transition: left 1s, top 1s;
 }
 
 .stickman {
     left: 50%;
     top: 160px;
     transform: translateX(-50%);
-    transition: left 1s, top 1s;
 }
 
 .stickman2 {
-    left: 55%;
+    left: 58%;
     top: 160px;
     display: none;
-    transition: left 1s, top 1s;
+}
+
+.stickman3 {
+    left: 42%;
+    top: 160px;
+    display: none;
 }
 
 .head {
@@ -207,9 +213,18 @@ h1 {
 
 .hut {
     position: absolute;
-    left: 42%;
-    bottom: 25px;
     font-size: 60px;
+}
+
+#hut1 {
+    left: 38%;
+    bottom: 25px;
+    display: none;
+}
+
+#hut2 {
+    left: 47%;
+    bottom: 25px;
     display: none;
 }
 
@@ -246,7 +261,7 @@ button:disabled {
 .jobButton {
     display: block;
     margin: 8px auto;
-    width: 260px;
+    width: 280px;
 }
 
 .upgradeButton {
@@ -271,25 +286,15 @@ button:disabled {
 <div class="info">
 
 🪵 Wood: <span id="wood">0</span>
-
 &nbsp;&nbsp;
-
 🪨 Stone: <span id="stone">0</span>
-
 &nbsp;&nbsp;
-
 🐟 Food: <span id="food">0</span>
-
 &nbsp;&nbsp;
-
 🥚 Eggs: <span id="eggs">0</span>
-
 &nbsp;&nbsp;
-
 🍽️ Prepared: <span id="prepared">0</span>
-
 &nbsp;&nbsp;
-
 🪙 Coins: <span id="coins">0</span>
 
 <br><br>
@@ -323,30 +328,37 @@ button:disabled {
 <div class="fish fish1" onclick="gatherFish(this,7)">🐟</div>
 <div class="fish fish2" onclick="gatherFish(this,93)">🐟</div>
 
-<!-- FIRST STICKFOLK -->
+<!-- STICKFOLK 1 -->
 
 <div class="stickman" id="stickman">
-
 <div class="head"></div>
 <div class="body"></div>
 <div class="arm-left"></div>
 <div class="arm-right"></div>
 <div class="leg-left"></div>
 <div class="leg-right"></div>
-
 </div>
 
-<!-- SECOND STICKFOLK -->
+<!-- STICKFOLK 2 -->
 
 <div class="stickman2" id="stickman2">
-
 <div class="head"></div>
 <div class="body"></div>
 <div class="arm-left"></div>
 <div class="arm-right"></div>
 <div class="leg-left"></div>
 <div class="leg-right"></div>
+</div>
 
+<!-- STICKFOLK 3 -->
+
+<div class="stickman3" id="stickman3">
+<div class="head"></div>
+<div class="body"></div>
+<div class="arm-left"></div>
+<div class="arm-right"></div>
+<div class="leg-left"></div>
+<div class="leg-right"></div>
 </div>
 
 <!-- BUILDINGS -->
@@ -365,7 +377,11 @@ button:disabled {
 🏪
 </div>
 
-<div class="hut" id="hut">
+<div class="hut" id="hut1">
+🛖
+</div>
+
+<div class="hut" id="hut2">
 🛖
 </div>
 
@@ -412,9 +428,7 @@ Status:
 <br>
 
 <button onclick="cookFood()">
-
 🍳 Cook 5 Eggs → 5 Prepared Food
-
 </button>
 
 </div>
@@ -433,72 +447,118 @@ Status:
 <br>
 
 <button onclick="sellFood()">
-
 🍽️ Sell 5 Prepared Food → 10 Coins
-
 </button>
 
 </div>
 
-<!-- HUT -->
+<!-- POPULATION -->
 
 <div class="panel">
 
-🛖 <b>Village Hut</b>
+👥 <b>Village Population</b>
 
 <br>
 
-Status:
-<span id="hutStatus">Not built</span>
+<span id="hutStatus">
+Build your first hut to attract another Stickfolk.
+</span>
 
 <br>
 
 <button id="buildHutButton" onclick="buildHut()">
+🛖 Build Hut (20 Wood + 10 Stone)
+</button>
 
-🛖 Build Hut
+<br>
 
+<button id="buildHut2Button" onclick="buildHut2()">
+🛖 Build Second Hut (25 Wood + 15 Stone)
 </button>
 
 </div>
 
-<!-- JOBS -->
+<!-- VILLAGER 2 -->
 
 <div class="panel">
 
-👷 <b>Villager Jobs</b>
+👷 <b>Stickfolk #2</b>
 
 <br>
 
-<span id="jobStatus">
-No extra villager available.
+<span id="jobStatus2">
+Not available yet.
 </span>
 
 <br>
 
 <button
 class="jobButton"
-id="woodJob"
-onclick="assignJob('Woodcutter')">
+id="woodJob2"
+onclick="assignJob(2,'Woodcutter')">
 
-🪓 Assign Woodcutter
-
-</button>
-
-<button
-class="jobButton"
-id="stoneJob"
-onclick="assignJob('Miner')">
-
-⛏️ Assign Miner
+🪓 Villager #2 → Woodcutter
 
 </button>
 
 <button
 class="jobButton"
-id="foodJob"
-onclick="assignJob('Fisher')">
+id="stoneJob2"
+onclick="assignJob(2,'Miner')">
 
-🎣 Assign Fisher
+⛏️ Villager #2 → Miner
+
+</button>
+
+<button
+class="jobButton"
+id="foodJob2"
+onclick="assignJob(2,'Fisher')">
+
+🎣 Villager #2 → Fisher
+
+</button>
+
+</div>
+
+<!-- VILLAGER 3 -->
+
+<div class="panel">
+
+👷 <b>Stickfolk #3</b>
+
+<br>
+
+<span id="jobStatus3">
+Not available yet.
+</span>
+
+<br>
+
+<button
+class="jobButton"
+id="woodJob3"
+onclick="assignJob(3,'Woodcutter')">
+
+🪓 Villager #3 → Woodcutter
+
+</button>
+
+<button
+class="jobButton"
+id="stoneJob3"
+onclick="assignJob(3,'Miner')">
+
+⛏️ Villager #3 → Miner
+
+</button>
+
+<button
+class="jobButton"
+id="foodJob3"
+onclick="assignJob(3,'Fisher')">
+
+🎣 Villager #3 → Fisher
 
 </button>
 
@@ -573,7 +633,9 @@ let population = 1;
 
 let chickenFed = false;
 let productionReady = false;
+
 let hutBuilt = false;
+let hut2Built = false;
 
 let smithyBuilt = false;
 
@@ -581,16 +643,15 @@ let axeUpgraded = false;
 let pickaxeUpgraded = false;
 let fishingUpgraded = false;
 
-let villagerJob = "None";
+let villager2Job = "None";
+let villager3Job = "None";
 
 let productionTimer = null;
-let jobTimer = null;
+let jobTimer2 = null;
+let jobTimer3 = null;
 
 const villager =
 document.getElementById("stickman");
-
-const worker =
-document.getElementById("stickman2");
 
 /* RESOURCES */
 
@@ -606,6 +667,7 @@ document.getElementById("population").textContent = population;
 
 updateFeedButton();
 updateHutButton();
+updateHut2Button();
 updateJobButtons();
 updateSmithyButtons();
 
@@ -623,25 +685,19 @@ if (chickenFed) {
 if (productionReady) {
 
 button.disabled = false;
-
-button.textContent =
-"🥚 Collect Eggs";
+button.textContent = "🥚 Collect Eggs";
 
 } else {
 
 button.disabled = true;
-
-button.textContent =
-"🐔 Producing Eggs...";
+button.textContent = "🐔 Producing Eggs...";
 
 }
 
 } else {
 
 button.disabled = food < 5;
-
-button.textContent =
-"🌾 Feed Chicken (5 Food)";
+button.textContent = "🌾 Feed Chicken (5 Food)";
 
 }
 
@@ -751,15 +807,13 @@ document.getElementById("message").textContent =
 
 }
 
-tree.style.visibility =
-"hidden";
+tree.style.visibility = "hidden";
 
 updateResources();
 
 setTimeout(function() {
 
-tree.style.visibility =
-"visible";
+tree.style.visibility = "visible";
 
 },5000);
 
@@ -795,15 +849,13 @@ document.getElementById("message").textContent =
 
 }
 
-rock.style.visibility =
-"hidden";
+rock.style.visibility = "hidden";
 
 updateResources();
 
 setTimeout(function() {
 
-rock.style.visibility =
-"visible";
+rock.style.visibility = "visible";
 
 },5000);
 
@@ -839,15 +891,13 @@ document.getElementById("message").textContent =
 
 }
 
-fish.style.visibility =
-"hidden";
+fish.style.visibility = "hidden";
 
 updateResources();
 
 setTimeout(function() {
 
-fish.style.visibility =
-"visible";
+fish.style.visibility = "visible";
 
 },5000);
 
@@ -897,7 +947,7 @@ updateResources();
 
 }
 
-/* HUT */
+/* FIRST HUT */
 
 function updateHutButton() {
 
@@ -907,20 +957,18 @@ document.getElementById("buildHutButton");
 if (hutBuilt) {
 
 button.disabled = true;
+button.textContent = "🛖 First Hut Built!";
 
-button.textContent =
-"🛖 Hut Built!";
-
-return;
-
-}
+} else {
 
 button.disabled =
 wood < 20 || stone < 10;
 
 }
 
-/* BUILD HUT */
+}
+
+/* BUILD FIRST HUT */
 
 function buildHut() {
 
@@ -932,23 +980,87 @@ wood -= 20;
 stone -= 10;
 
 hutBuilt = true;
-
 population = 2;
 
-document.getElementById("hut").style.display =
+document.getElementById("hut1").style.display =
 "block";
 
 document.getElementById("stickman2").style.display =
 "block";
 
 document.getElementById("hutStatus").textContent =
-"👥 A new villager joined!";
+"👥 Stickfolk #2 has joined your village!";
 
-document.getElementById("jobStatus").textContent =
-"Your new villager is unemployed.";
+document.getElementById("jobStatus2").textContent =
+"Villager #2 is unemployed.";
 
 document.getElementById("message").textContent =
 "🎉 A new Stickfolk has joined your village!";
+
+updateResources();
+
+}
+
+/* SECOND HUT */
+
+function updateHut2Button() {
+
+const button =
+document.getElementById("buildHut2Button");
+
+if (!hutBuilt) {
+
+button.disabled = true;
+return;
+
+}
+
+if (hut2Built) {
+
+button.disabled = true;
+button.textContent = "🛖 Second Hut Built!";
+
+return;
+
+}
+
+button.disabled =
+wood < 25 || stone < 15;
+
+}
+
+/* BUILD SECOND HUT */
+
+function buildHut2() {
+
+if (!hutBuilt) {
+return;
+}
+
+if (wood < 25 || stone < 15) {
+return;
+}
+
+wood -= 25;
+stone -= 15;
+
+hut2Built = true;
+population = 3;
+
+document.getElementById("hut2").style.display =
+"block";
+
+document.getElementById("stickman3").style.display =
+"block";
+
+document.getElementById("hutStatus").textContent =
+"👥 Your village now has 3 Stickfolk!";
+
+document.getElementById("jobStatus3").textContent =
+"Villager #3 is unemployed.";
+
+document.getElementById("message").textContent =
+"🎉 Another Stickfolk has joined the village!";
 
 updateResources();
 
@@ -958,81 +1070,129 @@ updateResources();
 
 function updateJobButtons() {
 
-const buttons = [
+const buttons2 = [
 
-document.getElementById("woodJob"),
-document.getElementById("stoneJob"),
-document.getElementById("foodJob")
+document.getElementById("woodJob2"),
+document.getElementById("stoneJob2"),
+document.getElementById("foodJob2")
+
+];
+
+const buttons3 = [
+
+document.getElementById("woodJob3"),
+document.getElementById("stoneJob3"),
+document.getElementById("foodJob3")
 
 ];
 
 if (population < 2) {
 
-buttons.forEach(function(button) {
-
+buttons2.forEach(function(button) {
 button.disabled = true;
-
 });
 
-return;
+} else {
 
-}
-
-buttons.forEach(function(button) {
-
+buttons2.forEach(function(button) {
 button.disabled = false;
-
 });
 
-if (villagerJob === "Woodcutter") {
+}
 
-document.getElementById("woodJob").textContent =
-"🪓 Woodcutter Assigned ✓";
+if (population < 3) {
 
-document.getElementById("stoneJob").textContent =
-"⛏️ Assign Miner";
+buttons3.forEach(function(button) {
+button.disabled = true;
+});
 
-document.getElementById("foodJob").textContent =
-"🎣 Assign Fisher";
+} else {
+
+buttons3.forEach(function(button) {
+button.disabled = false;
+});
 
 }
 
-else if (villagerJob === "Miner") {
+/* VILLAGER 2 */
 
-document.getElementById("woodJob").textContent =
-"🪓 Assign Woodcutter";
+if (villager2Job === "Woodcutter") {
 
-document.getElementById("stoneJob").textContent =
-"⛏️ Miner Assigned ✓";
+document.getElementById("woodJob2").textContent =
+"🪓 Villager #2 → Woodcutter ✓";
 
-document.getElementById("foodJob").textContent =
-"🎣 Assign Fisher";
+document.getElementById("stoneJob2").textContent =
+"⛏️ Villager #2 → Miner";
 
-}
-
-else if (villagerJob === "Fisher") {
-
-document.getElementById("woodJob").textContent =
-"🪓 Assign Woodcutter";
-
-document.getElementById("stoneJob").textContent =
-"⛏️ Assign Miner";
-
-document.getElementById("foodJob").textContent =
-"🎣 Fisher Assigned ✓";
+document.getElementById("foodJob2").textContent =
+"🎣 Villager #2 → Fisher";
 
 }
 
-else {
+else if (villager2Job === "Miner") {
 
-document.getElementById("woodJob").textContent =
-"🪓 Assign Woodcutter";
+document.getElementById("woodJob2").textContent =
+"🪓 Villager #2 → Woodcutter";
 
-document.getElementById("stoneJob").textContent =
-"⛏️ Assign Miner";
+document.getElementById("stoneJob2").textContent =
+"⛏️ Villager #2 → Miner ✓";
 
-document.getElementById("foodJob").textContent =
-"🎣 Assign Fisher";
+document.getElementById("foodJob2").textContent =
+"🎣 Villager #2 → Fisher";
+
+}
+
+else if (villager2Job === "Fisher") {
+
+document.getElementById("woodJob2").textContent =
+"🪓 Villager #2 → Woodcutter";
+
+document.getElementById("stoneJob2").textContent =
+"⛏️ Villager #2 → Miner";
+
+document.getElementById("foodJob2").textContent =
+"🎣 Villager #2 → Fisher ✓";
+
+}
+
+/* VILLAGER 3 */
+
+if (villager3Job === "Woodcutter") {
+
+document.getElementById("woodJob3").textContent =
+"🪓 Villager #3 → Woodcutter ✓";
+
+document.getElementById("stoneJob3").textContent =
+"⛏️ Villager #3 → Miner";
+
+document.getElementById("foodJob3").textContent =
+"🎣 Villager #3 → Fisher";
+
+}
+
+else if (villager3Job === "Miner") {
+
+document.getElementById("woodJob3").textContent =
+"🪓 Villager #3 → Woodcutter";
+
+document.getElementById("stoneJob3").textContent =
+"⛏️ Villager #3 → Miner ✓";
+
+document.getElementById("foodJob3").textContent =
+"🎣 Villager #3 → Fisher";
+
+}
+
+else if (villager3Job === "Fisher") {
+
+document.getElementById("woodJob3").textContent =
+"🪓 Villager #3 → Woodcutter";
+
+document.getElementById("stoneJob3").textContent =
+"⛏️ Villager #3 → Miner";
+
+document.getElementById("foodJob3").textContent =
+"🎣 Villager #3 → Fisher ✓";
 
 }
 
@@ -1040,69 +1200,121 @@ document.getElementById("foodJob").textContent =
 
 /* ASSIGN JOB */
 
-function assignJob(job) {
+function assignJob(villagerNumber, job) {
+
+if (villagerNumber === 2) {
 
 if (population < 2) {
 return;
 }
 
-villagerJob = job;
+villager2Job = job;
 
-document.getElementById("jobStatus").textContent =
-"👷 Villager is now a " + job + ".";
+document.getElementById("jobStatus2").textContent =
+"👷 Villager #2 is now a " + job + ".";
+
+startJob2();
+
+}
+
+if (villagerNumber === 3) {
+
+if (population < 3) {
+return;
+}
+
+villager3Job = job;
+
+document.getElementById("jobStatus3").textContent =
+"👷 Villager #3 is now a " + job + ".";
+
+startJob3();
+
+}
 
 document.getElementById("message").textContent =
-"👷 Your Stickfolk is now working as a " + job + "!";
-
-startJob();
+"👷 Villager #" + villagerNumber +
+" is now working as a " + job + "!";
 
 updateResources();
 
 }
 
-/* AUTOMATIC JOB */
+/* VILLAGER 2 JOB */
 
-function startJob() {
+function startJob2() {
 
-if (jobTimer) {
+if (jobTimer2) {
 
-clearInterval(jobTimer);
-
-jobTimer = null;
+clearInterval(jobTimer2);
+jobTimer2 = null;
 
 }
 
-if (villagerJob === "None") {
+if (villager2Job === "None") {
 return;
 }
 
-jobTimer =
+jobTimer2 =
 setInterval(function() {
 
-if (villagerJob === "Woodcutter") {
+if (villager2Job === "Woodcutter") {
 
 wood += 5;
 
-document.getElementById("message").textContent =
-"🪓 Your Woodcutter gathered 5 wood!";
-
 }
 
-else if (villagerJob === "Miner") {
+else if (villager2Job === "Miner") {
 
 stone += 3;
 
-document.getElementById("message").textContent =
-"⛏️ Your Miner gathered 3 stone!";
-
 }
 
-else if (villagerJob === "Fisher") {
+else if (villager2Job === "Fisher") {
 
 food += 3;
 
-document.getElementById("message").textContent =
-"🎣 Your Fisher gathered 3 food!";
+}
+
+updateResources();
+
+},10000);
+
+}
+
+/* VILLAGER 3 JOB */
+
+function startJob3() {
+
+if (jobTimer3) {
+
+clearInterval(jobTimer3);
+jobTimer3 = null;
+
+}
+
+if (villager3Job === "None") {
+return;
+}
+
+jobTimer3 =
+setInterval(function() {
+
+if (villager3Job === "Woodcutter") {
+
+wood += 5;
+
+}
+
+else if (villager3Job === "Miner") {
+
+stone += 3;
+
+}
+
+else if (villager3Job === "Fisher") {
+
+food += 3;
 
 }
 
@@ -1131,9 +1343,7 @@ document.getElementById("fishingButton");
 if (smithyBuilt) {
 
 buildButton.disabled = true;
-
-buildButton.textContent =
-"🔨 Smithy Built!";
+buildButton.textContent = "🔨 Smithy Built!";
 
 } else {
 
@@ -1157,9 +1367,7 @@ return;
 if (axeUpgraded) {
 
 axeButton.disabled = true;
-
-axeButton.textContent =
-"🪓 Axe Upgraded ✓";
+axeButton.textContent = "🪓 Axe Upgraded ✓";
 
 } else {
 
@@ -1175,9 +1383,7 @@ coins < 10;
 if (pickaxeUpgraded) {
 
 pickaxeButton.disabled = true;
-
-pickaxeButton.textContent =
-"⛏️ Pickaxe Upgraded ✓";
+pickaxeButton.textContent = "⛏️ Pickaxe Upgraded ✓";
 
 } else {
 
@@ -1193,7 +1399,6 @@ coins < 10;
 if (fishingUpgraded) {
 
 fishingButton.disabled = true;
-
 fishingButton.textContent =
 "🎣 Fishing Gear Upgraded ✓";
 
@@ -1298,7 +1503,7 @@ updateResources();
 
 }
 
-/* FISHING GEAR */
+/* FISHING */
 
 function upgradeFishingGear() {
 
