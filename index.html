@@ -121,6 +121,22 @@ h1 {
     display: none;
 }
 
+/* VILLAGER LABELS */
+
+.villager-label {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 2px solid #555;
+    border-radius: 8px;
+    padding: 3px 7px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
 .head {
     position: absolute;
     left: 25px;
@@ -331,34 +347,52 @@ button:disabled {
 <!-- STICKFOLK 1 -->
 
 <div class="stickman" id="stickman">
+
+<div class="villager-label" id="label1">
+👤 #1 • Village Leader
+</div>
+
 <div class="head"></div>
 <div class="body"></div>
 <div class="arm-left"></div>
 <div class="arm-right"></div>
 <div class="leg-left"></div>
 <div class="leg-right"></div>
+
 </div>
 
 <!-- STICKFOLK 2 -->
 
 <div class="stickman2" id="stickman2">
+
+<div class="villager-label" id="label2">
+👤 #2 • Unemployed
+</div>
+
 <div class="head"></div>
 <div class="body"></div>
 <div class="arm-left"></div>
 <div class="arm-right"></div>
 <div class="leg-left"></div>
 <div class="leg-right"></div>
+
 </div>
 
 <!-- STICKFOLK 3 -->
 
 <div class="stickman3" id="stickman3">
+
+<div class="villager-label" id="label3">
+👤 #3 • Unemployed
+</div>
+
 <div class="head"></div>
 <div class="body"></div>
 <div class="arm-left"></div>
 <div class="arm-right"></div>
 <div class="leg-left"></div>
 <div class="leg-right"></div>
+
 </div>
 
 <!-- BUILDINGS -->
@@ -670,6 +704,32 @@ updateHutButton();
 updateHut2Button();
 updateJobButtons();
 updateSmithyButtons();
+updateVillagerLabels();
+
+}
+
+/* VILLAGER LABELS */
+
+function updateVillagerLabels() {
+
+let job2 =
+villager2Job === "None"
+? "Unemployed"
+: villager2Job;
+
+let job3 =
+villager3Job === "None"
+? "Unemployed"
+: villager3Job;
+
+document.getElementById("label1").textContent =
+"👤 #1 • Village Leader";
+
+document.getElementById("label2").textContent =
+"👤 #2 • " + job2;
+
+document.getElementById("label3").textContent =
+"👤 #3 • " + job3;
 
 }
 
