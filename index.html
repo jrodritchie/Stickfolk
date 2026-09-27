@@ -249,6 +249,12 @@ button:disabled {
     width: 260px;
 }
 
+.upgradeButton {
+    display: block;
+    margin: 8px auto;
+    width: 280px;
+}
+
 #message {
     background: white;
     padding: 12px;
@@ -522,10 +528,29 @@ onclick="buildSmithy()">
 <br>
 
 <button
+class="upgradeButton"
 id="axeButton"
 onclick="upgradeAxe()">
 
 🪓 Upgrade Axe
+
+</button>
+
+<button
+class="upgradeButton"
+id="pickaxeButton"
+onclick="upgradePickaxe()">
+
+⛏️ Upgrade Pickaxe
+
+</button>
+
+<button
+class="upgradeButton"
+id="fishingButton"
+onclick="upgradeFishingGear()">
+
+🎣 Upgrade Fishing Gear
 
 </button>
 
@@ -549,8 +574,12 @@ let population = 1;
 let chickenFed = false;
 let productionReady = false;
 let hutBuilt = false;
+
 let smithyBuilt = false;
+
 let axeUpgraded = false;
+let pickaxeUpgraded = false;
+let fishingUpgraded = false;
 
 let villagerJob = "None";
 
@@ -750,13 +779,24 @@ document.getElementById("message").textContent =
 
 setTimeout(function() {
 
-stone += 3;
+if (pickaxeUpgraded) {
 
-rock.style.visibility =
-"hidden";
+stone += 6;
+
+document.getElementById("message").textContent =
+"⛏️ Your upgraded pickaxe gathered 6 stone!";
+
+} else {
+
+stone += 3;
 
 document.getElementById("message").textContent =
 "🪨 Your Stickfolk gathered 3 stone!";
+
+}
+
+rock.style.visibility =
+"hidden";
 
 updateResources();
 
@@ -783,13 +823,24 @@ document.getElementById("message").textContent =
 
 setTimeout(function() {
 
-food += 3;
+if (fishingUpgraded) {
 
-fish.style.visibility =
-"hidden";
+food += 6;
+
+document.getElementById("message").textContent =
+"🎣 Your upgraded fishing gear gathered 6 food!";
+
+} else {
+
+food += 3;
 
 document.getElementById("message").textContent =
 "🐟 Your Stickfolk gathered 3 food!";
+
+}
+
+fish.style.visibility =
+"hidden";
 
 updateResources();
 
@@ -1071,6 +1122,12 @@ document.getElementById("buildSmithyButton");
 const axeButton =
 document.getElementById("axeButton");
 
+const pickaxeButton =
+document.getElementById("pickaxeButton");
+
+const fishingButton =
+document.getElementById("fishingButton");
+
 if (smithyBuilt) {
 
 buildButton.disabled = true;
@@ -1088,13 +1145,14 @@ wood < 30 || stone < 20;
 if (!smithyBuilt) {
 
 axeButton.disabled = true;
-
-axeButton.textContent =
-"🪓 Upgrade Axe";
+pickaxeButton.disabled = true;
+fishingButton.disabled = true;
 
 return;
 
 }
+
+/* AXE */
 
 if (axeUpgraded) {
 
@@ -1103,14 +1161,50 @@ axeButton.disabled = true;
 axeButton.textContent =
 "🪓 Axe Upgraded ✓";
 
-return;
-
-}
+} else {
 
 axeButton.disabled =
 wood < 20 ||
 stone < 10 ||
 coins < 10;
+
+}
+
+/* PICKAXE */
+
+if (pickaxeUpgraded) {
+
+pickaxeButton.disabled = true;
+
+pickaxeButton.textContent =
+"⛏️ Pickaxe Upgraded ✓";
+
+} else {
+
+pickaxeButton.disabled =
+wood < 20 ||
+stone < 10 ||
+coins < 10;
+
+}
+
+/* FISHING */
+
+if (fishingUpgraded) {
+
+fishingButton.disabled = true;
+
+fishingButton.textContent =
+"🎣 Fishing Gear Upgraded ✓";
+
+} else {
+
+fishingButton.disabled =
+wood < 20 ||
+stone < 10 ||
+coins < 10;
+
+}
 
 }
 
@@ -1140,7 +1234,7 @@ updateResources();
 
 }
 
-/* UPGRADE AXE */
+/* AXE */
 
 function upgradeAxe() {
 
@@ -1167,6 +1261,70 @@ document.getElementById("smithyStatus").textContent =
 
 document.getElementById("message").textContent =
 "🪓 Your Stickfolk now gathers 8 wood at a time!";
+
+updateResources();
+
+}
+
+/* PICKAXE */
+
+function upgradePickaxe() {
+
+if (!smithyBuilt) {
+return;
+}
+
+if (
+wood < 20 ||
+stone < 10 ||
+coins < 10
+) {
+return;
+}
+
+wood -= 20;
+stone -= 10;
+coins -= 10;
+
+pickaxeUpgraded = true;
+
+document.getElementById("smithyStatus").textContent =
+"⛏️ Pickaxe upgraded!";
+
+document.getElementById("message").textContent =
+"⛏️ Your Stickfolk now gathers 6 stone at a time!";
+
+updateResources();
+
+}
+
+/* FISHING GEAR */
+
+function upgradeFishingGear() {
+
+if (!smithyBuilt) {
+return;
+}
+
+if (
+wood < 20 ||
+stone < 10 ||
+coins < 10
+) {
+return;
+}
+
+wood -= 20;
+stone -= 10;
+coins -= 10;
+
+fishingUpgraded = true;
+
+document.getElementById("smithyStatus").textContent =
+"🎣 Fishing gear upgraded!";
+
+document.getElementById("message").textContent =
+"🎣 Your Stickfolk now gathers 6 food at a time!";
 
 updateResources();
 
