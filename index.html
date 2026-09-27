@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Stickfolk</title>
 
 <style>
@@ -111,6 +112,7 @@ h1 {
     left: 55%;
     top: 160px;
     display: none;
+    transition: left 1s, top 1s;
 }
 
 .head {
@@ -391,7 +393,7 @@ Status:
 
 <br>
 
-<button id="cookButton" onclick="cookFood()">
+<button onclick="cookFood()">
 
 🍳 Cook 5 Eggs → 5 Prepared Food
 
@@ -412,7 +414,7 @@ Status:
 
 <br>
 
-<button id="sellButton" onclick="sellFood()">
+<button onclick="sellFood()">
 
 🍽️ Sell 5 Prepared Food → 10 Coins
 
@@ -455,7 +457,8 @@ No extra villager available.
 
 <br>
 
-<button class="jobButton"
+<button
+class="jobButton"
 id="woodJob"
 onclick="assignJob('Woodcutter')">
 
@@ -463,7 +466,8 @@ onclick="assignJob('Woodcutter')">
 
 </button>
 
-<button class="jobButton"
+<button
+class="jobButton"
 id="stoneJob"
 onclick="assignJob('Miner')">
 
@@ -471,7 +475,8 @@ onclick="assignJob('Miner')">
 
 </button>
 
-<button class="jobButton"
+<button
+class="jobButton"
 id="foodJob"
 onclick="assignJob('Fisher')">
 
@@ -503,9 +508,13 @@ let hutBuilt = false;
 let villagerJob = "None";
 
 let productionTimer = null;
+let jobTimer = null;
 
 const villager =
 document.getElementById("stickman");
+
+const worker =
+document.getElementById("stickman2");
 
 /* RESOURCES */
 
@@ -537,12 +546,14 @@ if (chickenFed) {
 if (productionReady) {
 
 button.disabled = false;
+
 button.textContent =
 "🥚 Collect Eggs";
 
 } else {
 
 button.disabled = true;
+
 button.textContent =
 "🐔 Producing Eggs...";
 
@@ -575,8 +586,6 @@ document.getElementById("message").textContent =
 "🐔 The chicken has been fed!";
 
 updateResources();
-
-/* TEST TIMER */
 
 let seconds = 20;
 
@@ -835,20 +844,24 @@ updateResources();
 
 }
 
-/* JOBS */
+/* JOB BUTTONS */
 
 function updateJobButtons() {
 
 const buttons = [
+
 document.getElementById("woodJob"),
 document.getElementById("stoneJob"),
 document.getElementById("foodJob")
+
 ];
 
 if (population < 2) {
 
 buttons.forEach(function(button) {
+
 button.disabled = true;
+
 });
 
 return;
@@ -856,7 +869,9 @@ return;
 }
 
 buttons.forEach(function(button) {
+
 button.disabled = false;
+
 });
 
 if (villagerJob === "Woodcutter") {
@@ -929,9 +944,65 @@ document.getElementById("jobStatus").textContent =
 document.getElementById("message").textContent =
 "👷 Your Stickfolk is now working as a " + job + "!";
 
+startJob();
+
 updateResources();
 
 }
+
+/* AUTOMATIC JOB */
+
+function startJob() {
+
+if (jobTimer) {
+
+clearInterval(jobTimer);
+
+jobTimer = null;
+
+}
+
+if (villagerJob === "None") {
+return;
+}
+
+jobTimer =
+setInterval(function() {
+
+if (villagerJob === "Woodcutter") {
+
+wood += 5;
+
+document.getElementById("message").textContent =
+"🪓 Your Woodcutter gathered 5 wood!";
+
+}
+
+else if (villagerJob === "Miner") {
+
+stone += 3;
+
+document.getElementById("message").textContent =
+"⛏️ Your Miner gathered 3 stone!";
+
+}
+
+else if (villagerJob === "Fisher") {
+
+food += 3;
+
+document.getElementById("message").textContent =
+"🎣 Your Fisher gathered 3 food!";
+
+}
+
+updateResources();
+
+},10000);
+
+}
+
+/* START */
 
 updateResources();
 
