@@ -23,7 +23,7 @@ h1 {
 .info {
     background: white;
     padding: 15px;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 #game {
@@ -41,25 +41,24 @@ h1 {
     user-select: none;
 }
 
-.tree1 {
-    left: 15%;
-    top: 50px;
+.tree1 { left: 12%; top: 45px; }
+.tree2 { right: 12%; top: 45px; }
+.tree3 { left: 18%; bottom: 80px; }
+.tree4 { right: 18%; bottom: 80px; }
+
+/* ROCKS */
+
+.rock {
+    position: absolute;
+    font-size: 45px;
+    cursor: pointer;
+    user-select: none;
 }
 
-.tree2 {
-    right: 15%;
-    top: 50px;
-}
-
-.tree3 {
-    left: 20%;
-    bottom: 80px;
-}
-
-.tree4 {
-    right: 20%;
-    bottom: 80px;
-}
+.rock1 { left: 35%; top: 80px; }
+.rock2 { right: 35%; top: 80px; }
+.rock3 { left: 38%; bottom: 70px; }
+.rock4 { right: 38%; bottom: 70px; }
 
 /* STICKFOLK */
 
@@ -73,8 +72,6 @@ h1 {
     transition: left 1s;
 }
 
-/* HEAD */
-
 .head {
     position: absolute;
     left: 25px;
@@ -86,8 +83,6 @@ h1 {
     background: #f5d6a0;
 }
 
-/* BODY */
-
 .body {
     position: absolute;
     left: 43px;
@@ -96,8 +91,6 @@ h1 {
     height: 65px;
     background: #222;
 }
-
-/* ARMS */
 
 .arm-left,
 .arm-right {
@@ -119,8 +112,6 @@ h1 {
     transform: rotate(35deg);
 }
 
-/* LEGS */
-
 .leg-left,
 .leg-right {
     position: absolute;
@@ -140,20 +131,22 @@ h1 {
     transform: rotate(65deg);
 }
 
+/* HOUSE */
+
+.house {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    font-size: 70px;
+}
+
 /* MESSAGE */
 
 #message {
     background: white;
     padding: 12px;
     font-size: 18px;
-}
-
-.house {
-    position: absolute;
-    left: 50%;
-    bottom: 25px;
-    transform: translateX(-50%);
-    font-size: 80px;
 }
 </style>
 </head>
@@ -165,28 +158,28 @@ h1 {
 <div class="info">
 🪵 Wood: <span id="wood">0</span>
 &nbsp;&nbsp;
-🪨 Stone: 0
+🪨 Stone: <span id="stone">0</span>
 &nbsp;&nbsp;
 🐟 Food: 0
 </div>
 
 <div id="game">
 
-    <div class="tree tree1" onclick="chop(this, 15)">
-        🌲
-    </div>
+    <!-- TREES -->
 
-    <div class="tree tree2" onclick="chop(this, 75)">
-        🌲
-    </div>
+    <div class="tree tree1" onclick="chopTree(this, 12)">🌲</div>
+    <div class="tree tree2" onclick="chopTree(this, 88)">🌲</div>
+    <div class="tree tree3" onclick="chopTree(this, 18)">🌲</div>
+    <div class="tree tree4" onclick="chopTree(this, 82)">🌲</div>
 
-    <div class="tree tree3" onclick="chop(this, 20)">
-        🌲
-    </div>
+    <!-- ROCKS -->
 
-    <div class="tree tree4" onclick="chop(this, 75)">
-        🌲
-    </div>
+    <div class="rock rock1" onclick="mineRock(this, 35)">🪨</div>
+    <div class="rock rock2" onclick="mineRock(this, 65)">🪨</div>
+    <div class="rock rock3" onclick="mineRock(this, 38)">🪨</div>
+    <div class="rock rock4" onclick="mineRock(this, 62)">🪨</div>
+
+    <!-- STICKFOLK -->
 
     <div class="stickman" id="stickman">
         <div class="head"></div>
@@ -208,15 +201,16 @@ h1 {
 <script>
 
 let wood = 0;
+let stone = 0;
 
-function chop(tree, position) {
+const villager = document.getElementById("stickman");
 
-    const villager = document.getElementById("stickman");
+function chopTree(tree, position) {
 
     villager.style.left = position + "%";
 
     document.getElementById("message").textContent =
-        "Your Stickfolk is chopping wood...";
+        "🪓 Your Stickfolk is chopping wood...";
 
     setTimeout(function() {
 
@@ -230,10 +224,42 @@ function chop(tree, position) {
             "🪵 Your Stickfolk gathered 5 wood!";
 
         setTimeout(function() {
+
             tree.style.visibility = "visible";
 
             document.getElementById("message").textContent =
                 "🌲 The tree has grown back!";
+
+        }, 5000);
+
+    }, 1000);
+}
+
+function mineRock(rock, position) {
+
+    villager.style.left = position + "%";
+
+    document.getElementById("message").textContent =
+        "⛏️ Your Stickfolk is mining stone...";
+
+    setTimeout(function() {
+
+        stone += 3;
+
+        document.getElementById("stone").textContent = stone;
+
+        rock.style.visibility = "hidden";
+
+        document.getElementById("message").textContent =
+            "🪨 Your Stickfolk gathered 3 stone!";
+
+        setTimeout(function() {
+
+            rock.style.visibility = "visible";
+
+            document.getElementById("message").textContent =
+                "🪨 The stone has returned!";
+
         }, 5000);
 
     }, 1000);
