@@ -213,6 +213,14 @@ h1 {
     display: none;
 }
 
+.smithy {
+    position: absolute;
+    left: 12%;
+    top: 145px;
+    font-size: 65px;
+    display: none;
+}
+
 /* PANELS */
 
 .panel {
@@ -355,6 +363,10 @@ button:disabled {
 🛖
 </div>
 
+<div class="smithy" id="smithy">
+🔨🏠
+</div>
+
 </div>
 
 <!-- CHICKEN -->
@@ -486,6 +498,39 @@ onclick="assignJob('Fisher')">
 
 </div>
 
+<!-- SMITHY -->
+
+<div class="panel">
+
+🔨 <b>Smithy</b>
+
+<br>
+
+Status:
+<span id="smithyStatus">Not built</span>
+
+<br>
+
+<button
+id="buildSmithyButton"
+onclick="buildSmithy()">
+
+🔨 Build Smithy
+
+</button>
+
+<br>
+
+<button
+id="axeButton"
+onclick="upgradeAxe()">
+
+🪓 Upgrade Axe
+
+</button>
+
+</div>
+
 <div id="message">
 Welcome to your new village!
 </div>
@@ -504,6 +549,8 @@ let population = 1;
 let chickenFed = false;
 let productionReady = false;
 let hutBuilt = false;
+let smithyBuilt = false;
+let axeUpgraded = false;
 
 let villagerJob = "None";
 
@@ -531,6 +578,7 @@ document.getElementById("population").textContent = population;
 updateFeedButton();
 updateHutButton();
 updateJobButtons();
+updateSmithyButtons();
 
 }
 
@@ -658,13 +706,24 @@ document.getElementById("message").textContent =
 
 setTimeout(function() {
 
-wood += 5;
+if (axeUpgraded) {
 
-tree.style.visibility =
-"hidden";
+wood += 8;
+
+document.getElementById("message").textContent =
+"🪓 Your upgraded axe gathered 8 wood!";
+
+} else {
+
+wood += 5;
 
 document.getElementById("message").textContent =
 "🪵 Your Stickfolk gathered 5 wood!";
+
+}
+
+tree.style.visibility =
+"hidden";
 
 updateResources();
 
@@ -999,6 +1058,117 @@ document.getElementById("message").textContent =
 updateResources();
 
 },10000);
+
+}
+
+/* SMITHY */
+
+function updateSmithyButtons() {
+
+const buildButton =
+document.getElementById("buildSmithyButton");
+
+const axeButton =
+document.getElementById("axeButton");
+
+if (smithyBuilt) {
+
+buildButton.disabled = true;
+
+buildButton.textContent =
+"🔨 Smithy Built!";
+
+} else {
+
+buildButton.disabled =
+wood < 30 || stone < 20;
+
+}
+
+if (!smithyBuilt) {
+
+axeButton.disabled = true;
+
+axeButton.textContent =
+"🪓 Upgrade Axe";
+
+return;
+
+}
+
+if (axeUpgraded) {
+
+axeButton.disabled = true;
+
+axeButton.textContent =
+"🪓 Axe Upgraded ✓";
+
+return;
+
+}
+
+axeButton.disabled =
+wood < 20 ||
+stone < 10 ||
+coins < 10;
+
+}
+
+/* BUILD SMITHY */
+
+function buildSmithy() {
+
+if (wood < 30 || stone < 20) {
+return;
+}
+
+wood -= 30;
+stone -= 20;
+
+smithyBuilt = true;
+
+document.getElementById("smithy").style.display =
+"block";
+
+document.getElementById("smithyStatus").textContent =
+"🔨 Smithy is ready!";
+
+document.getElementById("message").textContent =
+"🔨 Your village built a Smithy!";
+
+updateResources();
+
+}
+
+/* UPGRADE AXE */
+
+function upgradeAxe() {
+
+if (!smithyBuilt) {
+return;
+}
+
+if (
+wood < 20 ||
+stone < 10 ||
+coins < 10
+) {
+return;
+}
+
+wood -= 20;
+stone -= 10;
+coins -= 10;
+
+axeUpgraded = true;
+
+document.getElementById("smithyStatus").textContent =
+"🪓 Axe upgraded!";
+
+document.getElementById("message").textContent =
+"🪓 Your Stickfolk now gathers 8 wood at a time!";
+
+updateResources();
 
 }
 
