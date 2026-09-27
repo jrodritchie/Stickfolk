@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Stickfolk</title>
 
 <style>
+
 body {
     margin: 0;
     background: #8fbc70;
@@ -23,7 +25,7 @@ h1 {
 .info {
     background: white;
     padding: 15px;
-    font-size: 19px;
+    font-size: 18px;
 }
 
 #game {
@@ -58,6 +60,20 @@ h1 {
 .rock3 { left: 35%; bottom: 75px; }
 .rock4 { right: 35%; bottom: 75px; }
 
+/* POND */
+
+.pond {
+    position: absolute;
+    left: 50%;
+    top: 195px;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 70px;
+    background: #62a9d8;
+    border-radius: 50%;
+    border: 4px solid #4682a9;
+}
+
 /* FISH */
 
 .fish {
@@ -74,20 +90,6 @@ h1 {
 .fish2 {
     right: 5%;
     top: 210px;
-}
-
-/* POND */
-
-.pond {
-    position: absolute;
-    left: 50%;
-    top: 195px;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 70px;
-    background: #62a9d8;
-    border-radius: 50%;
-    border: 4px solid #4682a9;
 }
 
 /* STICKFOLK */
@@ -171,6 +173,16 @@ h1 {
     font-size: 70px;
 }
 
+/* COOP */
+
+.coop {
+    position: absolute;
+    left: 70%;
+    bottom: 20px;
+    font-size: 75px;
+    display: none;
+}
+
 /* MESSAGE */
 
 #message {
@@ -178,6 +190,23 @@ h1 {
     padding: 12px;
     font-size: 18px;
 }
+
+/* BUTTON */
+
+button {
+    margin: 8px;
+    padding: 12px 18px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: #6b8e23;
+    color: white;
+}
+
+button:disabled {
+    background: #999;
+}
+
 </style>
 </head>
 
@@ -186,60 +215,76 @@ h1 {
 <h1>🌳 STICKFOLK 🌳</h1>
 
 <div class="info">
+
 🪵 Wood: <span id="wood">0</span>
+
 &nbsp;&nbsp;
+
 🪨 Stone: <span id="stone">0</span>
+
 &nbsp;&nbsp;
+
 🐟 Food: <span id="food">0</span>
+
 </div>
 
 <div id="game">
 
-    <!-- TREES -->
+<!-- TREES -->
 
-    <div class="tree tree1" onclick="chopTree(this, 10)">🌲</div>
-    <div class="tree tree2" onclick="chopTree(this, 90)">🌲</div>
-    <div class="tree tree3" onclick="chopTree(this, 15)">🌲</div>
-    <div class="tree tree4" onclick="chopTree(this, 85)">🌲</div>
+<div class="tree tree1" onclick="chopTree(this,10)">🌲</div>
+<div class="tree tree2" onclick="chopTree(this,90)">🌲</div>
+<div class="tree tree3" onclick="chopTree(this,15)">🌲</div>
+<div class="tree tree4" onclick="chopTree(this,85)">🌲</div>
 
-    <!-- ROCKS -->
+<!-- ROCKS -->
 
-    <div class="rock rock1" onclick="mineRock(this, 32)">🪨</div>
-    <div class="rock rock2" onclick="mineRock(this, 68)">🪨</div>
-    <div class="rock rock3" onclick="mineRock(this, 35)">🪨</div>
-    <div class="rock rock4" onclick="mineRock(this, 65)">🪨</div>
+<div class="rock rock1" onclick="mineRock(this,32)">🪨</div>
+<div class="rock rock2" onclick="mineRock(this,68)">🪨</div>
+<div class="rock rock3" onclick="mineRock(this,35)">🪨</div>
+<div class="rock rock4" onclick="mineRock(this,65)">🪨</div>
 
-    <!-- POND -->
+<!-- POND -->
 
-    <div class="pond"></div>
+<div class="pond"></div>
 
-    <!-- FISH -->
+<!-- FISH -->
 
-    <div class="fish fish1" onclick="gatherFish(this, 8)">🐟</div>
-    <div class="fish fish2" onclick="gatherFish(this, 92)">🐟</div>
+<div class="fish fish1" onclick="gatherFish(this,8)">🐟</div>
+<div class="fish fish2" onclick="gatherFish(this,92)">🐟</div>
 
-    <!-- STICKFOLK -->
+<!-- STICKFOLK -->
 
-    <div class="stickman" id="stickman">
+<div class="stickman" id="stickman">
 
-        <div class="head"></div>
-        <div class="body"></div>
+<div class="head"></div>
+<div class="body"></div>
 
-        <div class="arm-left"></div>
-        <div class="arm-right"></div>
+<div class="arm-left"></div>
+<div class="arm-right"></div>
 
-        <div class="leg-left"></div>
-        <div class="leg-right"></div>
+<div class="leg-left"></div>
+<div class="leg-right"></div>
 
-    </div>
+</div>
 
-    <div class="house">🏠</div>
+<!-- HOUSE -->
+
+<div class="house">🏠</div>
+
+<!-- CHICKEN COOP -->
+
+<div class="coop" id="coop">🐔🏠</div>
 
 </div>
 
 <div id="message">
-    Welcome to your new village!
+Welcome to your new village!
 </div>
+
+<button id="buildButton" onclick="buildCoop()">
+🐔 Build Chicken Coop
+</button>
 
 <script>
 
@@ -247,99 +292,185 @@ let wood = 0;
 let stone = 0;
 let food = 0;
 
-const villager = document.getElementById("stickman");
+let coopBuilt = false;
+
+const villager =
+document.getElementById("stickman");
+
+function updateResources() {
+
+document.getElementById("wood").textContent = wood;
+
+document.getElementById("stone").textContent = stone;
+
+document.getElementById("food").textContent = food;
+
+updateBuildButton();
+
+}
+
+function updateBuildButton() {
+
+const button =
+document.getElementById("buildButton");
+
+if (coopBuilt) {
+
+button.textContent =
+"🐔 Chicken Coop Built!";
+
+button.disabled = true;
+
+return;
+
+}
+
+if (wood >= 20 && stone >= 10) {
+
+button.disabled = false;
+
+button.textContent =
+"🐔 Build Chicken Coop";
+
+} else {
+
+button.disabled = true;
+
+button.textContent =
+"🐔 Coop: 20 Wood + 10 Stone";
+
+}
+
+}
+
+/* WOOD */
 
 function chopTree(tree, position) {
 
-    villager.style.left = position + "%";
+villager.style.left =
+position + "%";
 
-    document.getElementById("message").textContent =
-        "🪓 Your Stickfolk is chopping wood...";
+document.getElementById("message").textContent =
+"🪓 Your Stickfolk is chopping wood...";
 
-    setTimeout(function() {
+setTimeout(function() {
 
-        wood += 5;
+wood += 5;
 
-        document.getElementById("wood").textContent = wood;
+tree.style.visibility =
+"hidden";
 
-        tree.style.visibility = "hidden";
+document.getElementById("message").textContent =
+"🪵 Your Stickfolk gathered 5 wood!";
 
-        document.getElementById("message").textContent =
-            "🪵 Your Stickfolk gathered 5 wood!";
+updateResources();
 
-        setTimeout(function() {
+setTimeout(function() {
 
-            tree.style.visibility = "visible";
+tree.style.visibility =
+"visible";
 
-            document.getElementById("message").textContent =
-                "🌲 The tree has grown back!";
+},5000);
 
-        }, 5000);
+},1000);
 
-    }, 1000);
 }
+
+/* STONE */
 
 function mineRock(rock, position) {
 
-    villager.style.left = position + "%";
+villager.style.left =
+position + "%";
 
-    document.getElementById("message").textContent =
-        "⛏️ Your Stickfolk is mining stone...";
+document.getElementById("message").textContent =
+"⛏️ Your Stickfolk is mining stone...";
 
-    setTimeout(function() {
+setTimeout(function() {
 
-        stone += 3;
+stone += 3;
 
-        document.getElementById("stone").textContent = stone;
+rock.style.visibility =
+"hidden";
 
-        rock.style.visibility = "hidden";
+document.getElementById("message").textContent =
+"🪨 Your Stickfolk gathered 3 stone!";
 
-        document.getElementById("message").textContent =
-            "🪨 Your Stickfolk gathered 3 stone!";
+updateResources();
 
-        setTimeout(function() {
+setTimeout(function() {
 
-            rock.style.visibility = "visible";
+rock.style.visibility =
+"visible";
 
-            document.getElementById("message").textContent =
-                "🪨 The stone has returned!";
+},5000);
 
-        }, 5000);
+},1000);
 
-    }, 1000);
 }
+
+/* FOOD */
 
 function gatherFish(fish, position) {
 
-    villager.style.left = position + "%";
+villager.style.left =
+position + "%";
 
-    document.getElementById("message").textContent =
-        "🎣 Your Stickfolk is gathering food...";
+document.getElementById("message").textContent =
+"🎣 Your Stickfolk is gathering food...";
 
-    setTimeout(function() {
+setTimeout(function() {
 
-        food += 3;
+food += 3;
 
-        document.getElementById("food").textContent = food;
+fish.style.visibility =
+"hidden";
 
-        fish.style.visibility = "hidden";
+document.getElementById("message").textContent =
+"🐟 Your Stickfolk gathered 3 food!";
 
-        document.getElementById("message").textContent =
-            "🐟 Your Stickfolk gathered 3 food!";
+updateResources();
 
-        setTimeout(function() {
+setTimeout(function() {
 
-            fish.style.visibility = "visible";
+fish.style.visibility =
+"visible";
 
-            document.getElementById("message").textContent =
-                "🐟 More fish have arrived!";
+},5000);
 
-        }, 5000);
+},1000);
 
-    }, 1000);
 }
+
+/* CHICKEN COOP */
+
+function buildCoop() {
+
+if (wood < 20 || stone < 10) {
+
+return;
+
+}
+
+wood -= 20;
+
+stone -= 10;
+
+coopBuilt = true;
+
+document.getElementById("coop").style.display =
+"block";
+
+document.getElementById("message").textContent =
+"🐔 You built a Chicken Coop!";
+
+updateResources();
+
+}
+
+updateResources();
 
 </script>
 
 </body>
-    </html>
+</html>
