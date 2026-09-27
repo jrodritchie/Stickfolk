@@ -93,22 +93,24 @@ h1 {
 
 /* STICKFOLK */
 
-.stickman {
+.stickman,
+.stickman2 {
     position: absolute;
-    left: 50%;
-    top: 160px;
     width: 80px;
     height: 160px;
+}
+
+.stickman {
+    left: 50%;
+    top: 160px;
     transform: translateX(-50%);
     transition: left 1s, top 1s;
 }
 
 .stickman2 {
-    position: absolute;
     left: 55%;
     top: 160px;
-    width: 80px;
-    height: 160px;
+    display: none;
 }
 
 .head {
@@ -314,7 +316,7 @@ button:disabled {
 
 <!-- SECOND STICKFOLK -->
 
-<div class="stickman2" id="stickman2" style="display:none;">
+<div class="stickman2" id="stickman2">
 
 <div class="head"></div>
 <div class="body"></div>
@@ -383,8 +385,7 @@ Status:
 
 <br>
 
-<button id="cookButton"
-onclick="cookFood">
+<button id="cookButton" onclick="cookFood()">
 
 🍳 Cook 5 Eggs → 5 Prepared Food
 
@@ -405,8 +406,7 @@ Status:
 
 <br>
 
-<button id="sellButton"
-onclick="sellFood()">
+<button id="sellButton" onclick="sellFood()">
 
 🍽️ Sell 5 Prepared Food → 10 Coins
 
@@ -427,8 +427,7 @@ Status:
 
 <br>
 
-<button id="buildHutButton"
-onclick="buildHut()">
+<button id="buildHutButton" onclick="buildHut()">
 
 🛖 Build Hut
 
@@ -521,14 +520,16 @@ chickenFed = true;
 productionReady = false;
 
 document.getElementById("coopStatus").textContent =
-"Producing eggs... 4:00";
+"Producing eggs... 0:20";
 
 document.getElementById("message").textContent =
 "🐔 The chicken has been fed!";
 
 updateResources();
 
-let seconds = 240;
+/* TEST TIMER: 20 SECONDS */
+
+let seconds = 20;
 
 productionTimer =
 setInterval(function() {
@@ -786,4 +787,4 @@ updateResources();
 </script>
 
 </body>
-    </html>
+</html>
