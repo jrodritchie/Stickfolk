@@ -1702,8 +1702,10 @@ function updateDayCycle() {
 
     if (isDay) {
         cycle.innerHTML = "🌞 Daytime";
+        document.body.style.background = "#8fbc70";
     } else {
         cycle.innerHTML = "🌙 Nighttime";
+        document.body.style.background = "#26354a";
     }
 
     isDay = !isDay;
