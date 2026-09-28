@@ -1709,8 +1709,30 @@ function updateDayCycle() {
     }
 
     isDay = !isDay;
-}
 
+    let sleepStatus = document.getElementById("sleepStatus");
+
+    if (!sleepStatus) {
+        sleepStatus = document.createElement("div");
+        sleepStatus.id = "sleepStatus";
+        sleepStatus.style.position = "fixed";
+        sleepStatus.style.bottom = "10px";
+        sleepStatus.style.left = "50%";
+        sleepStatus.style.transform = "translateX(-50%)";
+        sleepStatus.style.padding = "8px 14px";
+        sleepStatus.style.borderRadius = "10px";
+        sleepStatus.style.background = "rgba(0,0,0,0.65)";
+        sleepStatus.style.color = "white";
+        sleepStatus.style.fontWeight = "bold";
+        sleepStatus.style.zIndex = "9999";
+        document.body.appendChild(sleepStatus);
+    }
+
+    if (isDay) {
+        sleepStatus.innerHTML = "☀️ Villagers are awake";
+    } else {
+        sleepStatus.innerHTML = "🌙 Villagers are sleeping";
+    }
 setInterval(updateDayCycle, 30000);
 /* START */
 
