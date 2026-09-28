@@ -1695,7 +1695,21 @@ function newGame() {
     localStorage.removeItem("stickfolkSave");
     location.reload();
 }
+let isDay = true;
 
+function updateDayCycle() {
+    const cycle = document.getElementById("dayCycle");
+
+    if (isDay) {
+        cycle.innerHTML = "🌞 Daytime";
+    } else {
+        cycle.innerHTML = "🌙 Nighttime";
+    }
+
+    isDay = !isDay;
+}
+
+setInterval(updateDayCycle, 30000);
 /* START */
 
 updateResources();
