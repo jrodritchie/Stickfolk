@@ -1595,6 +1595,100 @@ updateResources();
 
 }
 
+/* SAVE / LOAD */
+
+function saveGame() {
+    localStorage.setItem("stickfolkSave", JSON.stringify({
+        wood: wood,
+        stone: stone,
+        food: food,
+        eggs: eggs,
+        prepared: prepared,
+        coins: coins,
+        population: population,
+        chickenFed: chickenFed,
+        productionReady: productionReady,
+        hutBuilt: hutBuilt,
+        hut2Built: hut2Built,
+        smithyBuilt: smithyBuilt,
+        axeUpgraded: axeUpgraded,
+        pickaxeUpgraded: pickaxeUpgraded,
+        fishingUpgraded: fishingUpgraded,
+        villager2Job: villager2Job,
+        villager3Job: villager3Job
+    }));
+
+    alert("Village saved!");
+}
+
+function loadGame() {
+
+    const saved = localStorage.getItem("stickfolkSave");
+
+    if (!saved) {
+        alert("No saved village found.");
+        return;
+    }
+
+    const data = JSON.parse(saved);
+
+    wood = data.wood || 0;
+    stone = data.stone || 0;
+    food = data.food || 0;
+    eggs = data.eggs || 0;
+    prepared = data.prepared || 0;
+    coins = data.coins || 0;
+
+    population = data.population || 1;
+
+    chickenFed = data.chickenFed || false;
+    productionReady = data.productionReady || false;
+
+    hutBuilt = data.hutBuilt || false;
+    hut2Built = data.hut2Built || false;
+
+    smithyBuilt = data.smithyBuilt || false;
+
+    axeUpgraded = data.axeUpgraded || false;
+    pickaxeUpgraded = data.pickaxeUpgraded || false;
+    fishingUpgraded = data.fishingUpgraded || false;
+
+    villager2Job = data.villager2Job || "None";
+    villager3Job = data.villager3Job || "None";
+
+    document.getElementById("hut1").style.display =
+        hutBuilt ? "block" : "none";
+
+    document.getElementById("hut2").style.display =
+        hut2Built ? "block" : "none";
+
+    document.getElementById("smithy").style.display =
+        smithyBuilt ? "block" : "none";
+
+    document.getElementById("stickman2").style.display =
+        population >= 2 ? "block" : "none";
+
+    document.getElementById("stickman3").style.display =
+        population >= 3 ? "block" : "none";
+
+    updateResources();
+
+    if (villager2Job !== "None") {
+        startJob2();
+    }
+
+    if (villager3Job !== "None") {
+        startJob3();
+    }
+
+    alert("Village loaded!");
+}
+
+function newGame() {
+    localStorage.removeItem("stickfolkSave");
+    location.reload();
+}
+
 /* START */
 
 updateResources();
