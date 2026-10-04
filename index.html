@@ -1792,7 +1792,28 @@ function updateDayCycle() {
         // Stickfolk eat once per day
         consumeDailyFood();
     }
+function updateFoodStatus() {
 
+    const foodStatus = document.getElementById("message");
+
+    const daysOfFood = Math.floor(food / (population * foodConsumedPerDay));
+
+    if (daysOfFood >= 3) {
+
+        foodStatus.textContent =
+            `🍲 Food supply: ${food} (${daysOfFood} days of food)`;
+
+    } else if (daysOfFood >= 1) {
+
+        foodStatus.textContent =
+            `⚠️ Food supply: ${food} (${daysOfFood} day${daysOfFood === 1 ? "" : "s"} left)`;
+
+    } else {
+
+        foodStatus.textContent =
+            "🔴 Food shortage! Your Stickfolk need food!";
+    }
+}
     isDay = !isDay;
 }
 
@@ -1801,6 +1822,7 @@ setInterval(updateDayCycle, 30000);
 /* START */
 
 updateResources();
+updateFoodStatus();
 
 </script>
 
