@@ -732,7 +732,7 @@ let fishingUpgraded = false;
 
 let villager2Job = "None";
 let villager3Job = "None";
-
+let leaderJob = "None";
 let productionTimer = null;
 let jobTimer2 = null;
 let jobTimer3 = null;
@@ -764,6 +764,8 @@ updateVillagerLabels();
 /* VILLAGE LEADER JOB */
 
 function assignLeaderJob(job) {
+
+    leaderJob = job;
 
     if (job === "Woodcutter") {
 
