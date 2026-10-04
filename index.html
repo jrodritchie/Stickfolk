@@ -789,7 +789,41 @@ function assignLeaderJob(job) {
     }
 
 }
+/* LEADER PRODUCTION */
 
+let leaderTimer = null;
+
+function startLeaderJob() {
+
+    if (leaderTimer) {
+        clearInterval(leaderTimer);
+        leaderTimer = null;
+    }
+
+    if (leaderJob === "None") {
+        return;
+    }
+
+    leaderTimer = setInterval(function() {
+
+        if (leaderJob === "Woodcutter") {
+            wood += 5;
+        }
+
+        else if (leaderJob === "Miner") {
+            stone += 3;
+        }
+
+        else if (leaderJob === "Fisher") {
+            food += 3;
+        }
+
+        updateResources();
+        updateFoodStatus();
+
+    }, 10000);
+
+}
 /* VILLAGER LABELS */
 
 function updateVillagerLabels() {
