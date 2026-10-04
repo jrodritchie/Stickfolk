@@ -1661,6 +1661,28 @@ function checkPopulationGrowth() {
 
         updateResources();
     }
+}/* DAILY FOOD CONSUMPTION */
+
+function consumeDailyFood() {
+
+    if (population <= 0) {
+        return;
+    }
+
+    if (food >= population * foodConsumedPerDay) {
+
+        food -= population * foodConsumedPerDay;
+
+        document.getElementById("message").textContent =
+            `🍲 Your Stickfolk ate ${population * foodConsumedPerDay} food today.`;
+
+    } else {
+
+        document.getElementById("message").textContent =
+            "⚠️ Your village doesn't have enough food!";
+    }
+
+    updateResources();
 }
 /* SAVE / LOAD */
 immigrationTimer = setInterval(checkPopulationGrowth, 30000);
@@ -1766,12 +1788,16 @@ function updateDayCycle() {
     } else {
         cycle.innerHTML = "🌙 Nighttime";
         document.body.style.background = "#26354a";
+
+        // Stickfolk eat once per day
+        consumeDailyFood();
     }
 
     isDay = !isDay;
-    }
-    
+}
+
 setInterval(updateDayCycle, 30000);
+
 /* START */
 
 updateResources();
