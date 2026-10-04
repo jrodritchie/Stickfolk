@@ -1042,15 +1042,19 @@ wood < 20 || stone < 10;
 
 function buildHut() {
 
-if (wood < 20 || stone < 10) {
-return;
-}
+    if (wood < 20 || stone < 10) {
+        return;
+    }
+
+    if (hutBuilt) {
+        return;
+    }
 
 wood -= 20;
 stone -= 10;
 
 hutBuilt = true;
-population = 2;
+populationCapacity = 2;
 
 document.getElementById("hut1").style.display =
 "block";
