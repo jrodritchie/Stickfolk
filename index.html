@@ -766,7 +766,7 @@ updateVillagerLabels();
 function assignLeaderJob(job) {
 
     leaderJob = job;
-
+updateVillagerLabels();
     if (job === "Woodcutter") {
 
         document.getElementById("leaderStatus").textContent =
@@ -841,7 +841,9 @@ villager3Job === "None"
 : villager3Job;
 
 document.getElementById("label1").textContent =
-"👤 #1 • Village Leader";
+    leaderJob === "None"
+    ? "👤 #1 • Village Leader"
+    : "👤 #1 • Leader (" + leaderJob + ")";
 
 document.getElementById("label2").textContent =
 "👤 #2 • " + job2;
