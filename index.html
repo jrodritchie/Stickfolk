@@ -693,7 +693,7 @@ let villager3Job = "None";
 let productionTimer = null;
 let jobTimer2 = null;
 let jobTimer3 = null;
-
+let immigrationTimer = null;
 const villager =
 document.getElementById("stickman");
 
@@ -1608,9 +1608,62 @@ document.getElementById("message").textContent =
 updateResources();
 
 }
+/* POPULATION GROWTH */
 
+function checkPopulationGrowth() {
+
+    if (population >= populationCapacity) {
+        return;
+    }
+
+    if (food < 10) {
+        return;
+    }
+
+    if (population === 1 && hutBuilt) {
+
+        food -= 10;
+        population = 2;
+
+        document.getElementById("stickman2").style.display =
+            "block";
+
+        document.getElementById("hutStatus").textContent =
+            "👥 A new Stickfolk has moved into the village!";
+
+        document.getElementById("jobStatus2").textContent =
+            "Villager #2 is unemployed.";
+
+        document.getElementById("message").textContent =
+            "🎉 A new Stickfolk has arrived!";
+
+        updateResources();
+
+        return;
+    }
+
+    if (population === 2 && hut2Built) {
+
+        food -= 10;
+        population = 3;
+
+        document.getElementById("stickman3").style.display =
+            "block";
+
+        document.getElementById("hutStatus").textContent =
+            "👥 Another Stickfolk has moved into the village!";
+
+        document.getElementById("jobStatus3").textContent =
+            "Villager #3 is unemployed.";
+
+        document.getElementById("message").textContent =
+            "🎉 Another Stickfolk has arrived!";
+
+        updateResources();
+    }
+}
 /* SAVE / LOAD */
-
+immigrationTimer = setInterval(checkPopulationGrowth, 30000);
 function saveGame() {
     localStorage.setItem("stickfolkSave", JSON.stringify({
         wood: wood,
