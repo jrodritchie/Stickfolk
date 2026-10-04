@@ -598,6 +598,49 @@ onclick="assignJob(3,'Fisher')">
 
 </div>
 
+<!-- VILLAGE LEADER -->
+
+<div class="panel">
+
+👤 <b>Village Leader</b>
+
+<br>
+
+<span id="leaderStatus">
+Ready to work.
+</span>
+
+<br>
+
+<button
+class="jobButton"
+id="leaderWoodJob"
+onclick="assignLeaderJob('Woodcutter')">
+
+🪓 Leader → Woodcutter
+
+</button>
+
+<button
+class="jobButton"
+id="leaderStoneJob"
+onclick="assignLeaderJob('Miner')">
+
+⛏️ Leader → Miner
+
+</button>
+
+<button
+class="jobButton"
+id="leaderFoodJob"
+onclick="assignLeaderJob('Fisher')">
+
+🎣 Leader → Fisher
+
+</button>
+
+</div>
+
 <!-- SMITHY -->
 
 <div class="panel">
@@ -715,6 +758,33 @@ updateHut2Button();
 updateJobButtons();
 updateSmithyButtons();
 updateVillagerLabels();
+
+}
+
+/* VILLAGE LEADER JOB */
+
+function assignLeaderJob(job) {
+
+    if (job === "Woodcutter") {
+
+        document.getElementById("leaderStatus").textContent =
+            "🪓 Working as a Woodcutter";
+
+    }
+
+    else if (job === "Miner") {
+
+        document.getElementById("leaderStatus").textContent =
+            "⛏️ Working as a Miner";
+
+    }
+
+    else if (job === "Fisher") {
+
+        document.getElementById("leaderStatus").textContent =
+            "🎣 Working as a Fisher";
+
+    }
 
 }
 
