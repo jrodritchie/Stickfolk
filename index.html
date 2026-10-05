@@ -817,9 +817,25 @@ function startLeaderJob() {
         leaderTimer = null;
     }
 
-    if (leaderJob === "None") {
-        return;
+    if (leaderJob === "Woodcutter") {
+
+    let woodWorkers = 0;
+
+    if (leaderJob === "Woodcutter") {
+        woodWorkers++;
     }
+
+    if (villager2Job === "Woodcutter") {
+        woodWorkers++;
+    }
+
+    if (villager3Job === "Woodcutter") {
+        woodWorkers++;
+    }
+
+    wood += 5 * woodWorkers;
+
+}
 
     leaderTimer = setInterval(function() {
 
