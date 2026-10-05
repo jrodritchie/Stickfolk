@@ -871,12 +871,47 @@ document.getElementById("label3").textContent =
 
 /* WORKFORCE SUMMARY */
 
+/* WORKFORCE SUMMARY */
+
+let woodcutters = 0;
+let miners = 0;
+let fishers = 0;
+let unemployed = 0;
+
+let jobs = [
+    leaderJob,
+    villager2Job,
+    villager3Job
+];
+
+jobs.forEach(function(job) {
+
+    if (job === "Woodcutter") {
+        woodcutters++;
+    }
+
+    else if (job === "Miner") {
+        miners++;
+    }
+
+    else if (job === "Fisher") {
+        fishers++;
+    }
+
+    else {
+        unemployed++;
+    }
+
+});
+
 document.getElementById("workforceStatus").innerHTML =
-    "👤 Leader: " + (leaderJob === "None" ? "Unemployed" : leaderJob) +
+    "🪓 Woodcutters: " + woodcutters +
     "<br>" +
-    "👤 Villager #2: " + job2 +
+    "⛏️ Miners: " + miners +
     "<br>" +
-    "👤 Villager #3: " + job3;
+    "🎣 Fishers: " + fishers +
+    "<br>" +
+    "💤 Unemployed: " + unemployed;
 
 }
 
