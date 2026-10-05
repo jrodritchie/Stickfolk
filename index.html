@@ -1506,67 +1506,23 @@ setInterval(function() {
 
 if (villager2Job === "Woodcutter") {
 
-wood += 5;
+wood += 5 * getWorkers("Woodcutter");
 
 }
 
 else if (villager2Job === "Miner") {
 
-stone += 3;
+stone += 3 * getWorkers("Miner");
 
 }
 
 else if (villager2Job === "Fisher") {
 
-food += 3;
+food += 3 * getWorkers("Fisher");
 
 }
 
 updateResources();
-
-},10000);
-
-}
-
-/* VILLAGER 3 JOB */
-
-
-function startJob3() {
-
-if (jobTimer3) {
-
-clearInterval(jobTimer3);
-jobTimer3 = null;
-
-}
-
-if (villager3Job === "None") {
-return;
-}
-
-jobTimer3 =
-setInterval(function() {
-
-if (villager3Job === "Woodcutter") {
-
-wood += 5;
-
-}
-
-else if (villager3Job === "Miner") {
-
-stone += 3;
-
-}
-
-else if (villager3Job === "Fisher") {
-
-food += 3;
-
-}
-
-updateResources();
-updateFoodStatus();
 
 },10000);
 
