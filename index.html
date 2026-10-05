@@ -805,6 +805,25 @@ updateVillagerLabels();
     }
 
     startLeaderJob();
+/* WORKFORCE CHECK */
+
+function getWorkers(job) {
+
+    let workers = 0;
+
+    if (leaderJob === job) {
+        workers++;
+    }
+
+    if (villager2Job === job) {
+        workers++;
+    }
+
+    if (villager3Job === job) {
+        workers++;
+    }
+
+    return workers;
 
 }
 /* LEADER PRODUCTION */
