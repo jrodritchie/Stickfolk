@@ -1584,9 +1584,17 @@ stone += 3;
 
 }
 
-else if (villager2Job === "Fisher") {
+else if (leaderJob === "Fisher") {
+
+if (fishingUpgraded) {
+
+food += 6;
+
+} else {
 
 food += 3;
+
+}
 
 }
 
@@ -1643,7 +1651,15 @@ stone += 3;
 
 else if (villager3Job === "Fisher") {
 
+if (fishingUpgraded) {
+
+food += 6;
+
+} else {
+
 food += 3;
+
+}
 
 }
 
