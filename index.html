@@ -869,9 +869,15 @@ function startLeaderJob() {
         stoneWorkers++;
     }
 
-    stone += 3;
+        if (pickaxeUpgraded) {
 
-}
+        stone += 6;
+
+    } else {
+
+        stone += 3;
+
+    }
 
         else if (leaderJob === "Fisher") {
             food += 3;
@@ -1562,7 +1568,15 @@ wood += 5;
 
 else if (villager2Job === "Miner") {
 
+if (pickaxeUpgraded) {
+
+stone += 6;
+
+} else {
+
 stone += 3;
+
+}
 
 }
 
@@ -1611,7 +1625,15 @@ wood += 5;
 
 else if (villager3Job === "Miner") {
 
+if (pickaxeUpgraded) {
+
+stone += 6;
+
+} else {
+
 stone += 3;
+
+}
 
 }
 
