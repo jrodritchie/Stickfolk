@@ -843,9 +843,25 @@ function startLeaderJob() {
             wood += 5;
         }
 
-        else if (leaderJob === "Miner") {
-            stone += 3;
-        }
+       else if (leaderJob === "Miner") {
+
+    let stoneWorkers = 0;
+
+    if (leaderJob === "Miner") {
+        stoneWorkers++;
+    }
+
+    if (villager2Job === "Miner") {
+        stoneWorkers++;
+    }
+
+    if (villager3Job === "Miner") {
+        stoneWorkers++;
+    }
+
+    stone += 3 * stoneWorkers;
+
+}
 
         else if (leaderJob === "Fisher") {
             food += 3;
