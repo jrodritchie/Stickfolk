@@ -867,6 +867,17 @@ document.getElementById("label2").textContent =
 document.getElementById("label3").textContent =
 "👤 #3 • " + job3;
 
+
+
+/* WORKFORCE SUMMARY */
+
+document.getElementById("workforceStatus").innerHTML =
+    "👤 Leader: " + (leaderJob === "None" ? "Unemployed" : leaderJob) +
+    "<br>" +
+    "👤 Villager #2: " + job2 +
+    "<br>" +
+    "👤 Villager #3: " + job3;
+
 }
 
 /* CHICKEN */
