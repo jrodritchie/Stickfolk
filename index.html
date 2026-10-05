@@ -840,8 +840,18 @@ function startLeaderJob() {
     leaderTimer = setInterval(function() {
 
         if (leaderJob === "Woodcutter") {
-            wood += 5;
-        }
+
+    if (axeUpgraded) {
+
+        wood += 8;
+
+    } else {
+
+        wood += 5;
+
+    }
+
+}
 
        else if (leaderJob === "Miner") {
 
