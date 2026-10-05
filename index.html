@@ -883,9 +883,17 @@ function startLeaderJob() {
 
         else if (leaderJob === "Fisher") {
 
-            food += 3;
+if (fishingUpgraded) {
 
-        }
+food += 6;
+
+} else {
+
+food += 3;
+
+}
+
+}
 
         updateResources();
         updateFoodStatus();
