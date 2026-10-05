@@ -1012,7 +1012,8 @@ food -= 5;
 
 chickenFed = true;
 productionReady = false;
-
+document.getElementById("feedButton").textContent =
+"⏱️ Producing Eggs...";
 document.getElementById("coopStatus").textContent =
 "Producing eggs... 0:20";
 
@@ -1052,7 +1053,8 @@ productionReady = true;
 
 document.getElementById("coopStatus").textContent =
 "🥚 Eggs are ready!";
-
+document.getElementById("feedButton").textContent =
+"🥚 Collect 3 Eggs";
 updateResources();
 
 }
@@ -1070,7 +1072,8 @@ productionReady = false;
 
 document.getElementById("coopStatus").textContent =
 "Needs food";
-
+document.getElementById("feedButton").textContent =
+"🌾 Feed Chicken (5 Food)";
 document.getElementById("message").textContent =
 "🥚 You collected 3 eggs!";
 
