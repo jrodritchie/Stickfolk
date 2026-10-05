@@ -1087,6 +1087,17 @@ updateResources();
 }
 function upgradeCoop() {
 
+if (chickenCount < 2) {
+
+chickenCount = 2;
+
+document.getElementById("message").textContent =
+"🏡 The Chicken Coop was upgraded! You now have 2 chickens.";
+
+updateResources();
+
+}
+
 }
 /* WOOD */
 
