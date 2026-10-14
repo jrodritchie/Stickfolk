@@ -260,6 +260,14 @@ h1 {
     display: none;
 }
 
+.warehouse {
+    position: absolute;
+    right: 5%;
+    bottom: 25px;
+    font-size: 60px;
+    display: none;
+}
+
 /* PANELS */
 
 .panel {
@@ -351,6 +359,8 @@ button:disabled {
 🪙 Coins: <span id="coins">0</span>
 &nbsp;&nbsp;
 🪵 Lumber: <span id="lumber">0</span>
+&nbsp;&nbsp;
+📦 Storage: <span id="storageCapacity">100</span> each
 
 <div class="resource-guide" id="resourceGuide" aria-live="polite">
   <b>📦 Resource Guide</b>
@@ -469,6 +479,10 @@ button:disabled {
 
 <div class="lumberyard" id="lumberyard">
 🪵🏠
+</div>
+
+<div class="warehouse" id="warehouse">
+📦🏠
 </div>
 
 </div>
@@ -797,6 +811,16 @@ Status:
 
 </div>
 
+<!-- RESOURCE STORAGE -->
+<div class="panel" id="warehousePanel">
+📦 <b>Village Warehouse</b><br>
+Storage capacity: <span id="warehouseCapacityText">100</span> of each stored resource<br>
+Status: <span id="warehouseStatus">Build the Lumber Yard and reach 2 villagers to unlock the Warehouse.</span><br>
+<small>Wood, Stone, Food, Eggs, Prepared Food, and Lumber each have a storage limit. Coins are not stored here.</small><br>
+<button id="buildWarehouseButton" onclick="buildWarehouse()">🔒 Build the Lumber Yard and reach 2 villagers first</button>
+<button id="upgradeWarehouseButton" onclick="upgradeWarehouse()" disabled>📦 Expand Warehouse</button>
+</div>
+
 <div class="panel" id="dayCycle">
 🌞 Daytime
 </div>
@@ -822,6 +846,12 @@ let prepared = 0;
 let coins = 0;
 let lumber = 0;
 let lumberyardBuilt = false;
+let storageCapacity = 100;
+let warehouseBuilt = false;
+let warehouseLevel = 0;
+const baseStorageCapacity = 100;
+const warehouseStorageBonus = 100;
+const maxWarehouseLevel = 3;
 
 let population = 1;
     
@@ -857,6 +887,16 @@ document.getElementById("stickman");
 
 function updateResources() {
 
+// Keep each stored resource within the village's current capacity.
+wood = Math.max(0, Math.min(storageCapacity, wood));
+stone = Math.max(0, Math.min(storageCapacity, stone));
+food = Math.max(0, Math.min(storageCapacity, food));
+eggs = Math.max(0, Math.min(storageCapacity, eggs));
+prepared = Math.max(0, Math.min(storageCapacity, prepared));
+lumber = Math.max(0, Math.min(storageCapacity, lumber));
+
+ document.getElementById("storageCapacity").textContent = storageCapacity;
+ document.getElementById("warehouseCapacityText").textContent = storageCapacity;
 document.getElementById("wood").textContent = wood;
 document.getElementById("stone").textContent = stone;
 document.getElementById("food").textContent = food;
@@ -866,6 +906,7 @@ document.getElementById("coins").textContent = coins;
 document.getElementById("lumber").textContent = lumber;
 updateResourceGuide();
 updateLumberyardButtons();
+updateWarehouseButtons();
 document.getElementById("population").textContent = population;
 document.getElementById("chickenCount").textContent = chickenCount;
 updateFeedButton();
@@ -885,6 +926,16 @@ function updateResourceGuide() {
     const guide = document.getElementById("resourceGuideText");
     if (!guide) return;
     const tips = [];
+
+    const storedResources = [wood, stone, food, eggs, prepared, lumber];
+    if (storedResources.some(amount => amount >= storageCapacity)) {
+        tips.push(`📦 Storage is full for at least one resource (${storageCapacity} each). Build or expand the Warehouse to increase capacity.`);
+    }
+    if (lumberyardBuilt && !warehouseBuilt) {
+        tips.push("📦 Warehouse unlocks now: build it to raise each resource limit from 100 to 200.");
+    } else if (warehouseBuilt && warehouseLevel < maxWarehouseLevel) {
+        tips.push(`📦 Warehouse level ${warehouseLevel}/${maxWarehouseLevel}. Expand it to increase capacity to ${storageCapacity + warehouseStorageBonus}.`);
+    }
 
     if (wood < 10) {
         tips.push("🪵 Wood is low — chop trees to gather more.");
@@ -2269,6 +2320,74 @@ function processLumber() {
     updateResources();
 }
 
+/* WAREHOUSE AND STORAGE */
+function updateWarehouseButtons() {
+    const buildButton = document.getElementById("buildWarehouseButton");
+    const upgradeButton = document.getElementById("upgradeWarehouseButton");
+    const status = document.getElementById("warehouseStatus");
+    if (!buildButton || !upgradeButton || !status) return;
+
+    const unlocked = lumberyardBuilt && population >= 2;
+    buildButton.disabled = warehouseBuilt || !unlocked || wood < 30 || stone < 15;
+    buildButton.textContent = warehouseBuilt
+        ? "📦 Warehouse Built!"
+        : (!unlocked
+            ? "🔒 Build the Lumber Yard and reach 2 villagers first"
+            : "📦 Build Warehouse (30 Wood + 15 Stone)");
+
+    upgradeButton.disabled = !warehouseBuilt || warehouseLevel >= maxWarehouseLevel || wood < 30 || stone < 15 || lumber < 10;
+    upgradeButton.textContent = !warehouseBuilt
+        ? "🔒 Build the Warehouse first"
+        : warehouseLevel >= maxWarehouseLevel
+            ? "🏆 Warehouse Fully Expanded"
+            : `📦 Expand Storage (30 Wood + 15 Stone + 10 Lumber)`;
+
+    if (!warehouseBuilt) {
+        status.textContent = !lumberyardBuilt
+            ? "Locked: build the Lumber Yard first."
+            : population < 2
+                ? "Locked: reach 2 villagers first."
+                : (wood < 30 || stone < 15
+                    ? `Unlocked — needs 30 Wood and 15 Stone (you have ${wood} Wood and ${stone} Stone).`
+                    : "Ready to build! Storage will increase to 200 per resource.");
+    } else if (warehouseLevel >= maxWarehouseLevel) {
+        status.textContent = `Warehouse fully expanded. Capacity: ${storageCapacity} per resource.`;
+    } else {
+        status.textContent = `Warehouse level ${warehouseLevel}/${maxWarehouseLevel}. Capacity: ${storageCapacity} per resource. Expansion adds 100 capacity to every stored resource.`;
+    }
+}
+
+function buildWarehouse() {
+    if (warehouseBuilt || !lumberyardBuilt || population < 2 || wood < 30 || stone < 15) {
+        updateWarehouseButtons();
+        return;
+    }
+
+    wood -= 30;
+    stone -= 15;
+    warehouseBuilt = true;
+    warehouseLevel = 1;
+    storageCapacity = baseStorageCapacity + warehouseStorageBonus;
+    document.getElementById("warehouse").style.display = "block";
+    document.getElementById("message").textContent = "📦 The Warehouse is built! Each stored resource can now hold 200.";
+    updateResources();
+}
+
+function upgradeWarehouse() {
+    if (!warehouseBuilt || warehouseLevel >= maxWarehouseLevel || wood < 30 || stone < 15 || lumber < 10) {
+        updateWarehouseButtons();
+        return;
+    }
+
+    wood -= 30;
+    stone -= 15;
+    lumber -= 10;
+    warehouseLevel += 1;
+    storageCapacity = baseStorageCapacity + (warehouseLevel * warehouseStorageBonus);
+    document.getElementById("message").textContent = `📦 Warehouse expanded! Storage capacity is now ${storageCapacity} per resource.`;
+    updateResources();
+}
+
 /* SAVE / LOAD */
 function saveGame() {
     localStorage.setItem("stickfolkSave", JSON.stringify({
@@ -2280,6 +2399,9 @@ function saveGame() {
         coins: coins,
         lumber: lumber,
         lumberyardBuilt: lumberyardBuilt,
+        storageCapacity: storageCapacity,
+        warehouseBuilt: warehouseBuilt,
+        warehouseLevel: warehouseLevel,
         population: population,
         populationCapacity: populationCapacity,
         chickenCount: chickenCount,
@@ -2336,6 +2458,15 @@ function loadGame() {
     coins = data.coins ?? 0;
     lumber = data.lumber ?? 0;
     lumberyardBuilt = data.lumberyardBuilt ?? false;
+    warehouseBuilt = data.warehouseBuilt ?? false;
+    warehouseLevel = data.warehouseLevel ?? (warehouseBuilt ? 1 : 0);
+    storageCapacity = data.storageCapacity ?? (baseStorageCapacity + (warehouseLevel * warehouseStorageBonus));
+    storageCapacity = Math.max(baseStorageCapacity, Math.min(baseStorageCapacity + maxWarehouseLevel * warehouseStorageBonus, storageCapacity));
+    warehouseLevel = Math.max(0, Math.min(maxWarehouseLevel, warehouseLevel));
+    if (!warehouseBuilt) {
+        warehouseLevel = 0;
+        storageCapacity = baseStorageCapacity;
+    }
 
     population = data.population ?? 1;
 
@@ -2371,6 +2502,9 @@ function loadGame() {
 
     document.getElementById("lumberyard").style.display =
         lumberyardBuilt ? "block" : "none";
+
+    document.getElementById("warehouse").style.display =
+        warehouseBuilt ? "block" : "none";
 
     document.getElementById("lumberyardStatus").textContent =
         lumberyardBuilt ? "Ready to process wood into lumber!" : "Not built";
