@@ -1993,6 +1993,10 @@ function saveGame() {
         prepared: prepared,
         coins: coins,
         population: population,
+        populationCapacity: populationCapacity,
+        chickenCount: chickenCount,
+        coopLevel: coopLevel,
+        leaderJob: leaderJob,
         chickenFed: chickenFed,
         productionReady: productionReady,
         hutBuilt: hutBuilt,
@@ -2017,28 +2021,47 @@ function loadGame() {
         return;
     }
 
-    const data = JSON.parse(saved);
+    let data;
+    try {
+        data = JSON.parse(saved);
+    } catch (error) {
+        alert("The saved village could not be read. The save data may be damaged.");
+        return;
+    }
 
-    wood = data.wood || 0;
-    stone = data.stone || 0;
-    food = data.food || 0;
-    eggs = data.eggs || 0;
-    prepared = data.prepared || 0;
-    coins = data.coins || 0;
+    // Stop existing timers before restoring a saved village.
+    [productionTimer, jobTimer2, jobTimer3, leaderTimer].forEach(function(timer) {
+        if (timer) clearInterval(timer);
+    });
+    productionTimer = null;
+    jobTimer2 = null;
+    jobTimer3 = null;
+    leaderTimer = null;
 
-    population = data.population || 1;
+    wood = data.wood ?? 0;
+    stone = data.stone ?? 0;
+    food = data.food ?? 0;
+    eggs = data.eggs ?? 0;
+    prepared = data.prepared ?? 0;
+    coins = data.coins ?? 0;
 
-    chickenFed = data.chickenFed || false;
-    productionReady = data.productionReady || false;
+    population = data.population ?? 1;
 
-    hutBuilt = data.hutBuilt || false;
-    hut2Built = data.hut2Built || false;
+    populationCapacity = data.populationCapacity ?? (data.hut2Built ? 3 : data.hutBuilt ? 2 : 1);
+    chickenCount = data.chickenCount ?? 1;
+    coopLevel = data.coopLevel ?? 1;
+    leaderJob = data.leaderJob || "None";
+    chickenFed = data.chickenFed ?? false;
+    productionReady = data.productionReady ?? false;
 
-    smithyBuilt = data.smithyBuilt || false;
+    hutBuilt = data.hutBuilt ?? false;
+    hut2Built = data.hut2Built ?? false;
 
-    axeUpgraded = data.axeUpgraded || false;
-    pickaxeUpgraded = data.pickaxeUpgraded || false;
-    fishingUpgraded = data.fishingUpgraded || false;
+    smithyBuilt = data.smithyBuilt ?? false;
+
+    axeUpgraded = data.axeUpgraded ?? false;
+    pickaxeUpgraded = data.pickaxeUpgraded ?? false;
+    fishingUpgraded = data.fishingUpgraded ?? false;
 
     villager2Job = data.villager2Job || "None";
     villager3Job = data.villager3Job || "None";
@@ -2067,6 +2090,18 @@ function loadGame() {
     if (villager3Job !== "None") {
         startJob3();
     }
+    if (leaderJob !== "None") {
+        startLeaderJob();
+    }
+    document.getElementById("leaderStatus").textContent =
+        leaderJob === "None" ? "Ready to work." : "Working as a " + leaderJob + ".";
+    document.getElementById("smithyStatus").textContent =
+        !smithyBuilt ? "Not built" : axeUpgraded ? "Axe upgraded!" :
+        pickaxeUpgraded ? "Pickaxe upgraded!" : fishingUpgraded ? "Fishing gear upgraded!" : "🔨 Smithy is ready!";
+    document.getElementById("coopStatus").textContent =
+        productionReady ? "🥚 Eggs are ready!" : chickenFed ? "Producing eggs..." : "Needs food";
+    updateResources();
+    updateFoodStatus();
 
     alert("Village loaded!");
 }
@@ -2081,38 +2116,34 @@ function updateDayCycle() {
     const cycle = document.getElementById("dayCycle");
 
     if (isDay) {
-        cycle.innerHTML = "🌞 Daytime";
+        cycle.textContent = "🌞 Daytime";
         document.body.style.background = "#8fbc70";
     } else {
-        cycle.innerHTML = "🌙 Nighttime";
+        cycle.textContent = "🌙 Nighttime";
         document.body.style.background = "#26354a";
 
-        // Stickfolk eat once per day
+        // The village consumes food once at the start of nighttime.
         consumeDailyFood();
     }
+
+    isDay = !isDay;
+}
+
 function updateFoodStatus() {
-
     const foodStatus = document.getElementById("message");
-
-    const daysOfFood = Math.floor(food / (population * foodConsumedPerDay));
+    const dailyNeed = population * foodConsumedPerDay;
+    const daysOfFood = dailyNeed > 0 ? Math.floor(food / dailyNeed) : 0;
 
     if (daysOfFood >= 3) {
-
         foodStatus.textContent =
             `🍲 Food supply: ${food} (${daysOfFood} days of food)`;
-
     } else if (daysOfFood >= 1) {
-
         foodStatus.textContent =
             `⚠️ Food supply: ${food} (${daysOfFood} day${daysOfFood === 1 ? "" : "s"} left)`;
-
     } else {
-
         foodStatus.textContent =
             "🔴 Food shortage! Your Stickfolk need food!";
     }
-}
-    isDay = !isDay;
 }
 
 setInterval(updateDayCycle, 30000);
