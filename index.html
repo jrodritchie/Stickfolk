@@ -252,6 +252,14 @@ h1 {
     display: none;
 }
 
+.lumberyard {
+    position: absolute;
+    left: 5%;
+    bottom: 25px;
+    font-size: 60px;
+    display: none;
+}
+
 /* PANELS */
 
 .panel {
@@ -312,6 +320,8 @@ button:disabled {
 🍽️ Prepared: <span id="prepared">0</span>
 &nbsp;&nbsp;
 🪙 Coins: <span id="coins">0</span>
+&nbsp;&nbsp;
+🪵 Lumber: <span id="lumber">0</span>
 
 <br><br>
 
@@ -421,6 +431,10 @@ button:disabled {
 
 <div class="smithy" id="smithy">
 🔨🏠
+</div>
+
+<div class="lumberyard" id="lumberyard">
+🪵🏠
 </div>
 
 </div>
@@ -668,7 +682,9 @@ Leader: Unemployed
 <br>
 
 Status:
-<span id="smithyStatus">Not built</span>
+<span id="smithyStatus">Locked: reach 2 villagers</span>
+<br>
+<small>Unlocks at population 2. Requires 30 Wood + 20 Stone.</small>
 
 <br>
 
@@ -710,6 +726,31 @@ onclick="upgradeFishingGear()">
 </button>
 
 </div>
+<!-- LUMBER YARD -->
+
+<div class="panel">
+
+🪵 <b>Lumber Yard</b>
+
+<br>
+
+Status:
+<span id="lumberyardStatus">Locked: build the Smithy</span>
+<br>
+<small>Unlocks after the Smithy is built and your village has 2 villagers. Requires 40 Wood + 25 Stone.</small>
+
+<br>
+
+<button id="buildLumberyardButton" onclick="buildLumberyard()">
+🪵 Build Lumber Yard (40 Wood + 25 Stone)
+</button>
+
+<button id="processLumberButton" onclick="processLumber()">
+🪵 Process 10 Wood → 5 Lumber
+</button>
+
+</div>
+
 <div class="panel" id="dayCycle">
 🌞 Daytime
 </div>
@@ -733,6 +774,8 @@ let food = 0;
 let eggs = 0;
 let prepared = 0;
 let coins = 0;
+let lumber = 0;
+let lumberyardBuilt = false;
 
 let population = 1;
     
@@ -773,6 +816,8 @@ document.getElementById("food").textContent = food;
 document.getElementById("eggs").textContent = eggs;
 document.getElementById("prepared").textContent = prepared;
 document.getElementById("coins").textContent = coins;
+document.getElementById("lumber").textContent = lumber;
+updateLumberyardButtons();
 document.getElementById("population").textContent = population;
 document.getElementById("chickenCount").textContent = chickenCount;
 updateFeedButton();
@@ -1050,13 +1095,15 @@ function updateCoopButton() {
         button.disabled = true;
         button.textContent = "🏡 Coop Upgraded ✓";
     } else {
-        button.disabled = wood < 15 || stone < 10;
-        button.textContent = "🏡 Upgrade Coop (15 Wood, 10 Stone)";
+        button.disabled = population < 2 || wood < 15 || stone < 10;
+        button.textContent = population < 2
+            ? "🔒 Coop upgrade unlocks at 2 villagers"
+            : "🏡 Upgrade Coop (15 Wood, 10 Stone)";
     }
 }
 
 function upgradeCoop() {
-    if (coopLevel >= 2 || chickenCount >= 2 || wood < 15 || stone < 10) return;
+    if (coopLevel >= 2 || chickenCount >= 2 || population < 2 || wood < 15 || stone < 10) return;
 
     wood -= 15;
     stone -= 10;
@@ -1685,11 +1732,25 @@ if (smithyBuilt) {
 buildButton.disabled = true;
 buildButton.textContent = "🔨 Smithy Built!";
 
+} else if (population < 2) {
+
+buildButton.disabled = true;
+buildButton.textContent = "🔒 Smithy unlocks at 2 villagers";
+
 } else {
 
-buildButton.disabled =
-wood < 30 || stone < 20;
+buildButton.disabled = wood < 30 || stone < 20;
+buildButton.textContent = "🔨 Build Smithy (30 Wood + 20 Stone)";
 
+}
+
+if (!smithyBuilt) {
+    document.getElementById("smithyStatus").textContent =
+        population < 2
+            ? "🔒 Locked: attract a second villager first"
+            : (wood < 30 || stone < 20
+                ? "Ready to unlock — gather 30 Wood + 20 Stone"
+                : "Available to build!");
 }
 
 if (!smithyBuilt) {
@@ -1757,7 +1818,7 @@ coins < 10;
 
 function buildSmithy() {
 
-if (wood < 30 || stone < 20) {
+if (population < 2 || wood < 30 || stone < 20) {
 return;
 }
 
@@ -1771,6 +1832,7 @@ document.getElementById("smithy").style.display =
 
 document.getElementById("smithyStatus").textContent =
 "🔨 Smithy is ready!";
+updateLumberyardButtons();
 
 document.getElementById("message").textContent =
 "🔨 Your village built a Smithy!";
@@ -1932,6 +1994,84 @@ function consumeDailyFood() {
     // Keep the main message available for building, job, and arrival notifications.
     updateResources();
 }
+/* LUMBER YARD */
+
+function updateLumberyardButtons() {
+    const buildButton = document.getElementById("buildLumberyardButton");
+    const processButton = document.getElementById("processLumberButton");
+
+    if (!buildButton || !processButton) return;
+
+    const unlocked = smithyBuilt && population >= 2;
+    buildButton.disabled = lumberyardBuilt || !unlocked || wood < 40 || stone < 25;
+    buildButton.textContent = lumberyardBuilt
+        ? "🪵 Lumber Yard Built!"
+        : (!unlocked
+            ? "🔒 Build the Smithy and reach 2 villagers first"
+            : "🪵 Build Lumber Yard (40 Wood + 25 Stone)");
+
+    processButton.disabled = !lumberyardBuilt || wood < 10;
+
+    if (!lumberyardBuilt) {
+        document.getElementById("lumberyardStatus").textContent =
+            !smithyBuilt
+                ? "🔒 Locked: build the Smithy first"
+                : (population < 2
+                    ? "🔒 Locked: attract a second villager first"
+                    : (wood < 40 || stone < 25
+                        ? "Unlocked — gather 40 Wood + 25 Stone"
+                        : "Available to build!"));
+    }
+    processButton.textContent = lumberyardBuilt
+        ? "🪵 Process 10 Wood → 5 Lumber"
+        : "🔒 Build the Lumber Yard first";
+}
+
+function buildLumberyard() {
+    if (lumberyardBuilt) {
+        document.getElementById("lumberyardStatus").textContent = "Already built!";
+        return;
+    }
+
+    if (!smithyBuilt || population < 2 || wood < 40 || stone < 25) {
+        document.getElementById("lumberyardStatus").textContent =
+            "Need 40 Wood and 25 Stone to build it.";
+        return;
+    }
+
+    wood -= 40;
+    stone -= 25;
+    lumberyardBuilt = true;
+    document.getElementById("lumberyard").style.display = "block";
+    document.getElementById("lumberyardStatus").textContent =
+        "Ready to process wood into lumber!";
+    document.getElementById("message").textContent =
+        "🪵 The Lumber Yard is built! You can now make lumber.";
+    updateResources();
+}
+
+function processLumber() {
+    if (!lumberyardBuilt) {
+        document.getElementById("lumberyardStatus").textContent =
+            "Build the Lumber Yard first.";
+        return;
+    }
+
+    if (wood < 10) {
+        document.getElementById("lumberyardStatus").textContent =
+            "You need 10 Wood to make 5 Lumber.";
+        return;
+    }
+
+    wood -= 10;
+    lumber += 5;
+    document.getElementById("lumberyardStatus").textContent =
+        "Processed 10 Wood into 5 Lumber!";
+    document.getElementById("message").textContent =
+        "🪵 The Lumber Yard produced 5 Lumber.";
+    updateResources();
+}
+
 /* SAVE / LOAD */
 function saveGame() {
     localStorage.setItem("stickfolkSave", JSON.stringify({
@@ -1941,6 +2081,8 @@ function saveGame() {
         eggs: eggs,
         prepared: prepared,
         coins: coins,
+        lumber: lumber,
+        lumberyardBuilt: lumberyardBuilt,
         population: population,
         populationCapacity: populationCapacity,
         chickenCount: chickenCount,
@@ -1994,6 +2136,8 @@ function loadGame() {
     eggs = data.eggs ?? 0;
     prepared = data.prepared ?? 0;
     coins = data.coins ?? 0;
+    lumber = data.lumber ?? 0;
+    lumberyardBuilt = data.lumberyardBuilt ?? false;
 
     population = data.population ?? 1;
 
@@ -2025,6 +2169,12 @@ function loadGame() {
 
     document.getElementById("smithy").style.display =
         smithyBuilt ? "block" : "none";
+
+    document.getElementById("lumberyard").style.display =
+        lumberyardBuilt ? "block" : "none";
+
+    document.getElementById("lumberyardStatus").textContent =
+        lumberyardBuilt ? "Ready to process wood into lumber!" : "Not built";
 
     document.getElementById("stickman2").style.display =
         population >= 2 ? "block" : "none";
