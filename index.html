@@ -447,7 +447,17 @@ button:disabled {
 
 <br>
 
-Chicken: <span id="chickenCount">1</span>
+Status: <span id="coopBuildStatus">Locked: build the Lumber Yard and reach 2 villagers</span>
+
+<br>
+
+<button id="buildCoopButton" onclick="buildCoop()">
+🔒 Build the Lumber Yard and reach 2 villagers first
+</button>
+
+<br>
+
+Chicken: <span id="chickenCount">0</span>
 
 <br>
 
@@ -785,7 +795,8 @@ let populationCapacity = 1;
 let chickenFed = false;
 let productionReady = false;
 let productionSecondsRemaining = 0;
-let chickenCount = 1;
+let chickenCount = 0;
+let coopBuilt = false;
 let coopLevel = 1;
 let hutBuilt = false;
 let hut2Built = false;
@@ -822,6 +833,7 @@ document.getElementById("population").textContent = population;
 document.getElementById("chickenCount").textContent = chickenCount;
 updateFeedButton();
 updateCoopButton();
+updateCoopBuildButton();
 updateFoodStatus();
 updateHutButton();
 updateHut2Button();
@@ -1010,12 +1022,65 @@ document.getElementById("workforceStatus").innerHTML =
 
 }
 
+/* CHICKEN COOP BUILDING */
+
+function updateCoopBuildButton() {
+    const button = document.getElementById("buildCoopButton");
+    const status = document.getElementById("coopBuildStatus");
+    if (!button || !status) return;
+
+    if (coopBuilt) {
+        button.disabled = true;
+        button.textContent = "🐔 Chicken Coop Built!";
+        status.textContent = "Built — ready to raise chickens.";
+        document.querySelector(".coop").style.display = "block";
+        return;
+    }
+
+    document.querySelector(".coop").style.display = "none";
+
+    if (!lumberyardBuilt || population < 2) {
+        button.disabled = true;
+        button.textContent = "🔒 Build the Lumber Yard and reach 2 villagers first";
+        status.textContent = !lumberyardBuilt
+            ? "🔒 Locked: build the Lumber Yard first."
+            : "🔒 Locked: attract a second villager first.";
+    } else {
+        button.disabled = lumber < 20 || wood < 10;
+        button.textContent = "🐔 Build Chicken Coop (20 Lumber + 10 Wood)";
+        status.textContent = (lumber < 20 || wood < 10)
+            ? "Unlocked — gather 20 Lumber and 10 Wood."
+            : "Available to build!";
+    }
+}
+
+function buildCoop() {
+    if (coopBuilt || !lumberyardBuilt || population < 2 || lumber < 20 || wood < 10) {
+        updateCoopBuildButton();
+        return;
+    }
+
+    lumber -= 20;
+    wood -= 10;
+    coopBuilt = true;
+    chickenCount = 1;
+    coopLevel = 1;
+    document.querySelector(".coop").style.display = "block";
+    document.getElementById("coopStatus").textContent = "Needs food";
+    document.getElementById("message").textContent =
+        "🐔 The Chicken Coop is built! Your first chicken is ready to be fed.";
+    updateResources();
+}
+
 /* CHICKEN */
 
 function updateFeedButton() {
     const button = document.getElementById("feedButton");
 
-    if (chickenFed && productionReady) {
+    if (!coopBuilt) {
+        button.disabled = true;
+        button.textContent = "🔒 Build the Chicken Coop first";
+    } else if (chickenFed && productionReady) {
         button.disabled = false;
         button.textContent = `🥚 Collect ${3 * chickenCount} Eggs`;
     } else if (chickenFed) {
@@ -1071,7 +1136,7 @@ function startChickenProduction(seconds = 20) {
 }
 
 function feedChicken() {
-    if (!chickenFed && food >= 5) {
+    if (coopBuilt && !chickenFed && food >= 5) {
         food -= 5;
         document.getElementById("message").textContent = "🐔 The chicken has been fed!";
         startChickenProduction(20);
@@ -1091,7 +1156,10 @@ function updateCoopButton() {
     const button = document.getElementById("upgradeCoopButton");
     if (!button) return;
 
-    if (coopLevel >= 2 || chickenCount >= 2) {
+    if (!coopBuilt) {
+        button.disabled = true;
+        button.textContent = "🔒 Build the Chicken Coop first";
+    } else if (coopLevel >= 2 || chickenCount >= 2) {
         button.disabled = true;
         button.textContent = "🏡 Coop Upgraded ✓";
     } else {
@@ -1103,7 +1171,7 @@ function updateCoopButton() {
 }
 
 function upgradeCoop() {
-    if (coopLevel >= 2 || chickenCount >= 2 || population < 2 || wood < 15 || stone < 10) return;
+    if (!coopBuilt || coopLevel >= 2 || chickenCount >= 2 || population < 2 || wood < 15 || stone < 10) return;
 
     wood -= 15;
     stone -= 10;
@@ -2086,6 +2154,7 @@ function saveGame() {
         population: population,
         populationCapacity: populationCapacity,
         chickenCount: chickenCount,
+        coopBuilt: coopBuilt,
         coopLevel: coopLevel,
         leaderJob: leaderJob,
         chickenFed: chickenFed,
@@ -2143,6 +2212,7 @@ function loadGame() {
 
     populationCapacity = data.populationCapacity ?? (data.hut2Built ? 3 : data.hutBuilt ? 2 : 1);
     chickenCount = data.chickenCount ?? 1;
+    coopBuilt = data.coopBuilt ?? (chickenCount > 0);
     coopLevel = data.coopLevel ?? 1;
     leaderJob = data.leaderJob || "None";
     chickenFed = data.chickenFed ?? false;
@@ -2176,6 +2246,8 @@ function loadGame() {
     document.getElementById("lumberyardStatus").textContent =
         lumberyardBuilt ? "Ready to process wood into lumber!" : "Not built";
 
+    document.querySelector(".coop").style.display = coopBuilt ? "block" : "none";
+
     document.getElementById("stickman2").style.display =
         population >= 2 ? "block" : "none";
 
@@ -2203,7 +2275,7 @@ function loadGame() {
         !smithyBuilt ? "Not built" : axeUpgraded ? "Axe upgraded!" :
         pickaxeUpgraded ? "Pickaxe upgraded!" : fishingUpgraded ? "Fishing gear upgraded!" : "🔨 Smithy is ready!";
     document.getElementById("coopStatus").textContent =
-        productionReady ? "🥚 Eggs are ready!" : chickenFed ? "Producing eggs..." : "Needs food";
+        !coopBuilt ? "Build the Chicken Coop first" : productionReady ? "🥚 Eggs are ready!" : chickenFed ? "Producing eggs..." : "Needs food";
     updateResources();
     updateFoodStatus();
 
