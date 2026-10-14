@@ -300,6 +300,19 @@ button:disabled {
     font-size: 18px;
 }
 
+
+.resource-guide {
+  margin-top: 8px;
+  padding: 9px 11px;
+  border: 1px solid rgba(70, 80, 50, 0.35);
+  border-radius: 8px;
+  background: rgba(255, 250, 225, 0.82);
+  color: #26351f;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+#resourceGuideText { margin-top: 4px; }
+
 </style>
 </head>
 
@@ -322,6 +335,11 @@ button:disabled {
 🪙 Coins: <span id="coins">0</span>
 &nbsp;&nbsp;
 🪵 Lumber: <span id="lumber">0</span>
+
+<div class="resource-guide" id="resourceGuide" aria-live="polite">
+  <b>📦 Resource Guide</b>
+  <div id="resourceGuideText">Gather wood, stone, and food to build up your village.</div>
+</div>
 
 <br><br>
 
@@ -828,6 +846,7 @@ document.getElementById("eggs").textContent = eggs;
 document.getElementById("prepared").textContent = prepared;
 document.getElementById("coins").textContent = coins;
 document.getElementById("lumber").textContent = lumber;
+updateResourceGuide();
 updateLumberyardButtons();
 document.getElementById("population").textContent = population;
 document.getElementById("chickenCount").textContent = chickenCount;
@@ -841,6 +860,61 @@ updateJobButtons();
 updateSmithyButtons();
 updateVillagerLabels();
 
+}
+
+
+function updateResourceGuide() {
+    const guide = document.getElementById("resourceGuideText");
+    if (!guide) return;
+    const tips = [];
+
+    if (wood < 10) {
+        tips.push("🪵 Wood is low — chop trees to gather more.");
+    } else if (!smithyBuilt && wood < 30) {
+        tips.push(`🪵 Smithy needs 30 Wood; you have ${wood}.`);
+    }
+
+    if (stone < 10) {
+        tips.push("🪨 Stone is low — mine rocks to gather more.");
+    } else if (!smithyBuilt && stone < 20) {
+        tips.push(`🪨 Smithy needs 20 Stone; you have ${stone}.`);
+    }
+
+    if (food < population * foodConsumedPerDay) {
+        tips.push("🍲 Food is below one day's needs. Gather fish before night.");
+    }
+
+    if (smithyBuilt && !lumberyardBuilt) {
+        const woodNeeded = Math.max(0, 40 - wood);
+        const stoneNeeded = Math.max(0, 25 - stone);
+        tips.push(woodNeeded === 0 && stoneNeeded === 0
+            ? "🪵 You have enough resources to build the Lumber Yard."
+            : `🪵 Lumber Yard needs 40 Wood and 25 Stone (${woodNeeded} more Wood, ${stoneNeeded} more Stone).`);
+    } else if (lumberyardBuilt) {
+        tips.push(wood >= 10
+            ? "🪵 Lumber recipe ready: 10 Wood → 5 Lumber."
+            : `🪵 Lumber Yard needs ${10 - wood} more Wood.`);
+    }
+
+    if (coopBuilt && chickenFed && productionReady) {
+        tips.push("🥚 Eggs are ready to collect from the Chicken Coop.");
+    } else if (coopBuilt && !chickenFed && food >= 5) {
+        tips.push("🐔 Chicken can be fed with 5 Food to start egg production.");
+    }
+
+    if (eggs >= 5) {
+        tips.push("🍳 Kitchen recipe ready: 5 Eggs → 5 Prepared Food.");
+    } else {
+        tips.push(`🍳 Kitchen needs ${5 - eggs} more Egg${5 - eggs === 1 ? "" : "s"}.`);
+    }
+
+    if (prepared >= 5) {
+        tips.push("🪙 Market recipe ready: 5 Prepared Food → 10 Coins.");
+    } else {
+        tips.push(`🪙 Market needs ${5 - prepared} more Prepared Food for a 10-Coin sale.`);
+    }
+
+    guide.textContent = tips.slice(0, 6).join("  ");
 }
 
 /* VILLAGE LEADER JOB */
@@ -1313,6 +1387,10 @@ fish.style.visibility = "visible";
 function cookFood() {
 
 if (eggs < 5) {
+document.getElementById("kitchenStatus").textContent =
+    `Needs ${5 - eggs} more Egg${5 - eggs === 1 ? "" : "s"}.`;
+document.getElementById("message").textContent =
+    "🍳 Gather more eggs before preparing food.";
 return;
 }
 
@@ -1334,6 +1412,10 @@ updateResources();
 function sellFood() {
 
 if (prepared < 5) {
+document.getElementById("marketStatus").textContent =
+    `Needs ${5 - prepared} more Prepared Food.`;
+document.getElementById("message").textContent =
+    "🪙 Prepare at least 5 food before selling at the market.";
 return;
 }
 
