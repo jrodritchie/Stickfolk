@@ -1877,81 +1877,62 @@ updateResources();
 /* POPULATION GROWTH */
 
 function checkPopulationGrowth() {
+    if (population >= populationCapacity) return;
 
-    if (population >= populationCapacity) {
-        return;
-    }
+    const newcomerAvailable =
+        (population === 1 && hutBuilt) ||
+        (population === 2 && hut2Built);
+
+    if (!newcomerAvailable) return;
 
     if (food < 10) {
+        document.getElementById("hutStatus").textContent =
+            population === 1
+                ? "🛖 Your first hut is ready. A new Stickfolk may arrive at day's end when you have at least 10 food available."
+                : "🛖 Your second hut is ready. Another Stickfolk may arrive at day's end when you have at least 10 food available.";
         return;
     }
 
-    if (population === 1 && hutBuilt) {
+    food -= 10;
+    population += 1;
 
-        food -= 10;
-        population = 2;
-
-        document.getElementById("stickman2").style.display =
-            "block";
-
+    if (population === 2) {
+        document.getElementById("stickman2").style.display = "block";
         document.getElementById("hutStatus").textContent =
             "👥 A new Stickfolk has moved into the village!";
-
         document.getElementById("jobStatus2").textContent =
             "Villager #2 is unemployed.";
-
         document.getElementById("message").textContent =
-            "🎉 A new Stickfolk has arrived!";
-
-        updateResources();
-
-        return;
-    }
-
-    if (population === 2 && hut2Built) {
-
-        food -= 10;
-        population = 3;
-
-        document.getElementById("stickman3").style.display =
-            "block";
-
+            "🎉 A new Stickfolk has arrived! Welcome to the village.";
+    } else if (population === 3) {
+        document.getElementById("stickman3").style.display = "block";
         document.getElementById("hutStatus").textContent =
             "👥 Another Stickfolk has moved into the village!";
-
         document.getElementById("jobStatus3").textContent =
             "Villager #3 is unemployed.";
-
         document.getElementById("message").textContent =
-            "🎉 Another Stickfolk has arrived!";
-
-        updateResources();
-    }
-}/* DAILY FOOD CONSUMPTION */
-
-function consumeDailyFood() {
-
-    if (population <= 0) {
-        return;
-    }
-
-    if (food >= population * foodConsumedPerDay) {
-
-        food -= population * foodConsumedPerDay;
-
-        document.getElementById("message").textContent =
-            `🍲 Your Stickfolk ate ${population * foodConsumedPerDay} food today.`;
-
-    } else {
-
-        document.getElementById("message").textContent =
-            "⚠️ Your village doesn't have enough food!";
+            "🎉 Another Stickfolk has arrived! Your community is growing.";
     }
 
     updateResources();
 }
+
+/* DAILY FOOD CONSUMPTION */
+
+
+function consumeDailyFood() {
+    if (population <= 0) return;
+
+    const dailyNeed = population * foodConsumedPerDay;
+
+    if (food >= dailyNeed) {
+        food -= dailyNeed;
+    }
+    // Food status is refreshed separately by updateResources()/updateFoodStatus().
+    // Keep the main message available for building, job, and arrival notifications.
+    updateResources();
+}
 /* SAVE / LOAD */
-immigrationTimer = setInterval(checkPopulationGrowth, 30000);
 function saveGame() {
     localStorage.setItem("stickfolkSave", JSON.stringify({
         wood: wood,
@@ -2095,8 +2076,9 @@ function updateDayCycle() {
         cycle.textContent = "🌙 Nighttime";
         document.body.style.background = "#26354a";
 
-        // The village consumes food once at the start of nighttime.
+        // At the end of the day, feed the current village and then check for newcomers.
         consumeDailyFood();
+        checkPopulationGrowth();
     }
 
     isDay = !isDay;
