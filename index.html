@@ -313,6 +313,22 @@ button:disabled {
 }
 #resourceGuideText { margin-top: 4px; }
 
+.production-track {
+    width: min(280px, 90%);
+    height: 12px;
+    margin: 8px auto;
+    border: 1px solid #60734a;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #e5e5e5;
+}
+.production-fill {
+    width: 0%;
+    height: 100%;
+    background: #6b8e23;
+    transition: width 0.25s linear;
+}
+
 </style>
 </head>
 
@@ -481,7 +497,9 @@ Chicken: <span id="chickenCount">0</span>
 
 Status:
 <span id="coopStatus">Needs food</span>
-
+<div class="production-track" id="productionTrack" role="progressbar" aria-label="Egg production progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="display:none;">
+  <div class="production-fill" id="productionFill"></div>
+</div>
 <br>
 
 <button id="feedButton" onclick="feedChicken()">
@@ -898,7 +916,9 @@ function updateResourceGuide() {
 
     if (coopBuilt && chickenFed && productionReady) {
         tips.push("🥚 Eggs are ready to collect from the Chicken Coop.");
-    } else if (coopBuilt && !chickenFed && food >= 5) {
+    } else if (coopBuilt && chickenFed) {
+        tips.push(`🐔 Egg production is underway: ${productionSecondsRemaining} seconds remaining.`);
+    } else if (coopBuilt && food >= 5) {
         tips.push("🐔 Chicken can be fed with 5 Food to start egg production.");
     }
 
@@ -1148,6 +1168,23 @@ function buildCoop() {
 
 /* CHICKEN */
 
+function updateProductionDisplay() {
+    const track = document.getElementById("productionTrack");
+    const fill = document.getElementById("productionFill");
+    if (!track || !fill) return;
+
+    const active = coopBuilt && chickenFed;
+    track.style.display = active ? "block" : "none";
+
+    const elapsed = productionReady
+        ? 20
+        : Math.max(0, Math.min(20, 20 - productionSecondsRemaining));
+    const percent = active ? Math.round((elapsed / 20) * 100) : 0;
+
+    fill.style.width = percent + "%";
+    track.setAttribute("aria-valuenow", String(percent));
+}
+
 function updateFeedButton() {
     const button = document.getElementById("feedButton");
 
@@ -1164,6 +1201,7 @@ function updateFeedButton() {
         button.disabled = food < 5;
         button.textContent = "🌾 Feed Chicken (5 Food)";
     }
+    updateProductionDisplay();
 }
 
 function startChickenProduction(seconds = 20) {
@@ -1177,36 +1215,44 @@ function startChickenProduction(seconds = 20) {
     if (productionSecondsRemaining <= 0) {
         productionReady = true;
         chickenFed = true;
-        document.getElementById("coopStatus").textContent = "🥚 Eggs are ready!";
+        document.getElementById("coopStatus").textContent = "🥚 Eggs are ready to collect!";
         updateResources();
+        updateProductionDisplay();
         return;
     }
 
     productionReady = false;
     chickenFed = true;
+
+    function refreshProductionStatus() {
+        const remaining = Math.max(0, productionSecondsRemaining);
+        const minutes = Math.floor(remaining / 60);
+        const displaySeconds = String(remaining % 60).padStart(2, "0");
+
+        document.getElementById("coopStatus").textContent = productionReady
+            ? "🥚 Eggs are ready to collect!"
+            : "Producing eggs... " + minutes + ":" + displaySeconds;
+
+        updateProductionDisplay();
+        updateFeedButton();
+    }
+
+    refreshProductionStatus();
     productionTimer = setInterval(function () {
         productionSecondsRemaining--;
-        const minutes = Math.floor(productionSecondsRemaining / 60);
-        const remainingSeconds = productionSecondsRemaining % 60;
-        const displaySeconds = remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
 
         if (productionSecondsRemaining <= 0) {
             clearInterval(productionTimer);
             productionTimer = null;
             productionSecondsRemaining = 0;
             productionReady = true;
-            document.getElementById("coopStatus").textContent = "🥚 Eggs are ready!";
-        } else {
-            document.getElementById("coopStatus").textContent =
-                "Producing eggs... " + minutes + ":" + displaySeconds;
+            document.getElementById("message").textContent =
+                "🥚 Egg production is complete! Your chicken coop is ready to collect.";
         }
+
+        refreshProductionStatus();
         updateResources();
     }, 1000);
-
-    document.getElementById("coopStatus").textContent =
-        "Producing eggs... " + Math.floor(productionSecondsRemaining / 60) + ":" +
-        String(productionSecondsRemaining % 60).padStart(2, "0");
-    updateResources();
 }
 
 function feedChicken() {
@@ -1221,7 +1267,8 @@ function feedChicken() {
         productionReady = false;
         productionSecondsRemaining = 0;
         document.getElementById("coopStatus").textContent = "Needs food";
-        document.getElementById("message").textContent = `🥚 You collected ${eggsCollected} eggs!`;
+        document.getElementById("message").textContent = `🥚 You collected ${eggsCollected} eggs! Feed the chickens again when you're ready.`;
+        updateProductionDisplay();
         updateResources();
     }
 }
@@ -2357,7 +2404,8 @@ function loadGame() {
         !smithyBuilt ? "Not built" : axeUpgraded ? "Axe upgraded!" :
         pickaxeUpgraded ? "Pickaxe upgraded!" : fishingUpgraded ? "Fishing gear upgraded!" : "🔨 Smithy is ready!";
     document.getElementById("coopStatus").textContent =
-        !coopBuilt ? "Build the Chicken Coop first" : productionReady ? "🥚 Eggs are ready!" : chickenFed ? "Producing eggs..." : "Needs food";
+        !coopBuilt ? "Build the Chicken Coop first" : productionReady ? "🥚 Eggs are ready to collect!" : chickenFed ? "Producing eggs..." : "Needs food";
+    updateProductionDisplay();
     updateResources();
     updateFoodStatus();
 
@@ -2412,6 +2460,7 @@ setInterval(updateDayCycle, 30000);
 
 updateResources();
 updateFoodStatus();
+updateProductionDisplay();
 
 </script>
 
