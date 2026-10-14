@@ -729,6 +729,9 @@ onclick="assignLeaderJob('Fisher')">
 <span id="workforceStatus">
 Leader: Unemployed
 </span>
+<div id="workforceAutomationStatus" style="margin-top:8px; line-height:1.5; font-size:0.92em;">
+Workers will automatically pause when their resource storage is full.
+</div>
 
 </div>
 
@@ -988,6 +991,40 @@ function updateResourceGuide() {
     guide.textContent = tips.slice(0, 6).join("  ");
 }
 
+/* STORAGE-AWARE WORKER AUTOMATION */
+function gatherForJob(job) {
+    if (job === "Woodcutter" && wood < storageCapacity) {
+        wood = Math.min(storageCapacity, wood + (axeUpgraded ? 8 : 5));
+    } else if (job === "Miner" && stone < storageCapacity) {
+        stone = Math.min(storageCapacity, stone + (pickaxeUpgraded ? 6 : 3));
+    } else if (job === "Fisher" && food < storageCapacity) {
+        food = Math.min(storageCapacity, food + (fishingUpgraded ? 6 : 3));
+    }
+}
+
+function workerAutomationLine(number, job) {
+    if (number > population) return "";
+    if (job === "None") return `👤 #${number}: Unassigned — choose a job to start automatic gathering.`;
+
+    const resource = job === "Woodcutter" ? wood : job === "Miner" ? stone : food;
+    const resourceName = job === "Woodcutter" ? "Wood" : job === "Miner" ? "Stone" : "Food";
+    const amount = job === "Woodcutter" ? (axeUpgraded ? 8 : 5) : job === "Miner" ? (pickaxeUpgraded ? 6 : 3) : (fishingUpgraded ? 6 : 3);
+    if (resource >= storageCapacity) {
+        return `⏸ #${number} ${job}: ${resourceName} storage full — paused; will resume automatically when space opens.`;
+    }
+    return `✅ #${number} ${job}: Working (+${amount} ${resourceName} every 10 seconds).`;
+}
+
+function updateWorkforceAutomationStatus() {
+    const status = document.getElementById("workforceAutomationStatus");
+    if (!status) return;
+    status.innerHTML = [
+        workerAutomationLine(1, leaderJob),
+        workerAutomationLine(2, villager2Job),
+        workerAutomationLine(3, villager3Job)
+    ].filter(Boolean).join("<br>");
+}
+
 /* VILLAGE LEADER JOB */
 
 function assignLeaderJob(job) {
@@ -1031,66 +1068,9 @@ function startLeaderJob() {
     // Production begins on the first timer tick, like the other villagers.
 
     leaderTimer = setInterval(function() {
-
-        if (leaderJob === "Woodcutter") {
-
-            if (axeUpgraded) {
-
-                wood += 8;
-
-            } else {
-
-                wood += 5;
-
-            }
-
-        }
-
-        else if (leaderJob === "Miner") {
-
-            let stoneWorkers = 0;
-
-            if (leaderJob === "Miner") {
-                stoneWorkers++;
-            }
-
-            if (villager2Job === "Miner") {
-                stoneWorkers++;
-            }
-
-            if (villager3Job === "Miner") {
-                stoneWorkers++;
-            }
-
-            if (pickaxeUpgraded) {
-
-                stone += 6;
-
-            } else {
-
-                stone += 3;
-
-            }
-
-        }
-
-        else if (leaderJob === "Fisher") {
-
-if (fishingUpgraded) {
-
-food += 6;
-
-} else {
-
-food += 3;
-
-}
-
-}
-
+        gatherForJob(leaderJob);
         updateResources();
         updateFoodStatus();
-
     }, 10000);
 
 }
@@ -1119,7 +1099,7 @@ document.getElementById("label2").textContent =
 document.getElementById("label3").textContent =
 "👤 #3 • " + job3;
 
-
+updateWorkforceAutomationStatus();
 
 /* WORKFORCE SUMMARY */
 
@@ -1843,54 +1823,11 @@ if (villager2Job === "None") {
 return;
 }
 
-jobTimer2 =
-setInterval(function() {
-
-if (villager2Job === "Woodcutter") {
-
-if (axeUpgraded) {
-
-wood += 8;
-
-} else {
-
-wood += 5;
-
-}
-
-}
-
-else if (villager2Job === "Miner") {
-
-if (pickaxeUpgraded) {
-
-stone += 6;
-
-} else {
-
-stone += 3;
-
-}
-
-}
-
-else if (villager2Job === "Fisher") {
-
-if (fishingUpgraded) {
-
-food += 6;
-
-} else {
-
-food += 3;
-
-}
-
-}
-
-updateResources();
-
-},10000);
+jobTimer2 = setInterval(function() {
+    gatherForJob(villager2Job);
+    updateResources();
+    updateFoodStatus();
+}, 10000);
 
 }
 /* VILLAGER 3 JOB */
@@ -1908,55 +1845,11 @@ if (villager3Job === "None") {
 return;
 }
 
-jobTimer3 =
-setInterval(function() {
-
-if (villager3Job === "Woodcutter") {
-
-if (axeUpgraded) {
-
-wood += 8;
-
-} else {
-
-wood += 5;
-
-}
-
-}
-
-else if (villager3Job === "Miner") {
-
-if (pickaxeUpgraded) {
-
-stone += 6;
-
-} else {
-
-stone += 3;
-
-}
-
-}
-
-else if (villager3Job === "Fisher") {
-
-if (fishingUpgraded) {
-
-food += 6;
-
-} else {
-
-food += 3;
-
-}
-
-}
-
-updateResources();
-updateFoodStatus();
-
-},10000);
+jobTimer3 = setInterval(function() {
+    gatherForJob(villager3Job);
+    updateResources();
+    updateFoodStatus();
+}, 10000);
 
 }
 /* SMITHY */
