@@ -395,6 +395,13 @@ button:disabled {
     border-bottom-color: #52677a;
 }
 
+/* Roads become darker at night */
+.village-map.nighttime::before,
+.village-map.nighttime::after {
+    background: #59616a;
+    border-color: rgba(30, 40, 50, 0.35);
+}
+
 .village-map::before {
 
     content: "";
