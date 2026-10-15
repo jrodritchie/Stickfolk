@@ -2643,6 +2643,20 @@ updateResources();
 updateFoodStatus();
 updateProductionDisplay();
 
+
+// Choose a varied villager sprite
+const villagerSprites = [
+    "assets/villager_idle.png",
+    "assets/villager_f_idle.png",
+    "assets/villager_fred_idle.png",
+    "assets/villager_mblonde_idle.png",
+    "assets/villager_old_idle.png",
+    "assets/villager_dark_idle.png"
+];
+
+document.querySelectorAll(".villager-sprite").forEach((sprite, index) => {
+    sprite.src = villagerSprites[index % villagerSprites.length];
+});    
 </script>
 
 </body>
