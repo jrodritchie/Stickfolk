@@ -379,9 +379,24 @@ button:disabled {
     background: linear-gradient(180deg, #b9df91 0%, #d4e9a7 55%, #a8d17c 100%);
     border-top: 5px solid #6f9b4c;
     border-bottom: 5px solid #6f9b4c;
+   
     box-shadow: inset 0 0 0 5px rgba(255,255,255,.15);
 }
+
+/* Nighttime village colours */
+.village-map.nighttime {
+    background: linear-gradient(
+        180deg,
+        #34465b 0%,
+        #46566a 55%,
+        #293b4b 100%
+    );
+    border-top-color: #52677a;
+    border-bottom-color: #52677a;
+}
+
 .village-map::before {
+
     content: "";
     position: absolute;
     left: -8%; right: -8%; top: 285px;
@@ -2572,15 +2587,19 @@ function newGame() {
 }
 let isDay = true;
 
+
 function updateDayCycle() {
     const cycle = document.getElementById("dayCycle");
+    const villageMap = document.getElementById("game");
 
     if (isDay) {
         cycle.textContent = "🌞 Daytime";
         document.body.style.background = "#8fbc70";
+        villageMap.classList.remove("nighttime");
     } else {
         cycle.textContent = "🌙 Nighttime";
         document.body.style.background = "#26354a";
+        villageMap.classList.add("nighttime");
 
         // At the end of the day, feed the current village and then check for newcomers.
         consumeDailyFood();
@@ -2589,6 +2608,7 @@ function updateDayCycle() {
 
     isDay = !isDay;
 }
+
 
 function updateFoodStatus() {
     const foodStatus = document.getElementById("foodStatus");
