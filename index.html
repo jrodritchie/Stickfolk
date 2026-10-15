@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Stickfolk v12 — Custom Villagers</title>
+<title>Stickfolk</title>
 
 <style>
 
@@ -120,13 +120,6 @@ h1 {
     top: 160px;
     display: none;
 }
-
-
-/* V12 custom pencil-crayon villager sprites */
-.villager-sprite { position:absolute; left:50%; bottom:0; transform:translateX(-50%); height:142px; width:auto; max-width:92px; object-fit:contain; image-rendering:auto; pointer-events:none; }
-.stickman .head,.stickman .body,.stickman .arm-left,.stickman .arm-right,.stickman .leg-left,.stickman .leg-right,
-.stickman2 .head,.stickman2 .body,.stickman2 .arm-left,.stickman2 .arm-right,.stickman2 .leg-left,.stickman2 .leg-right,
-.stickman3 .head,.stickman3 .body,.stickman3 .arm-left,.stickman3 .arm-right,.stickman3 .leg-left,.stickman3 .arm-right,.stickman3 .leg-left,.stickman3 .leg-right { display:none !important; }
 
 /* VILLAGER LABELS */
 
@@ -437,20 +430,6 @@ button:disabled {
     .map-heading { font-size: 13px; }
 }
 
-
-/* V11 custom pencil-crayon art sprites; game mechanics preserved */
-.scenery-extra{position:absolute;z-index:1;pointer-events:none}.berry-scenery{left:2%;top:205px}.garden-scenery{right:2%;top:205px}.berry-scenery .sprite-img,.garden-scenery .sprite-img{width:100px;height:78px}@media(max-width:600px){.berry-scenery .sprite-img,.garden-scenery .sprite-img{width:68px;height:55px}.berry-scenery{top:220px}.garden-scenery{top:220px}}
-.sprite-img{display:block;object-fit:contain;max-width:none;pointer-events:none;filter:drop-shadow(0 2px 1px rgba(45,55,30,.15));}
-.tree .sprite-img{width:100px;height:125px;}
-.rock .sprite-img{width:78px;height:62px;}
-.house .sprite-img{width:125px;height:140px;}
-.coop .sprite-img,.kitchen .sprite-img,.market .sprite-img{width:112px;height:125px;}
-.hut .sprite-img{width:100px;height:120px;}
-.smithy .sprite-img,.lumberyard .sprite-img,.warehouse .sprite-img{width:112px;height:125px;}
-.pond{background:transparent;border:0;box-shadow:none;width:190px;height:125px;}
-.pond .sprite-img{width:190px;height:125px;}
-@media(max-width:600px){.tree .sprite-img{width:72px;height:92px}.rock .sprite-img{width:55px;height:45px}.house .sprite-img{width:90px;height:100px}.coop .sprite-img,.kitchen .sprite-img,.market .sprite-img,.smithy .sprite-img,.lumberyard .sprite-img,.warehouse .sprite-img{width:78px;height:90px}.hut .sprite-img{width:72px;height:86px}.pond .sprite-img{width:135px;height:90px}}
-
 </style>
 </head>
 
@@ -492,26 +471,21 @@ button:disabled {
 
 <!-- TREES -->
 
-<div class="tree tree1" role="img" aria-label="Tree" onclick="chopTree(this,8)"><img class="sprite-img" src="assets/tree_green.png" alt="" /></div>
-<div class="tree tree2" role="img" aria-label="Tree" onclick="chopTree(this,92)"><img class="sprite-img" src="assets/tree_autumn.png" alt="" /></div>
-<div class="tree tree3" role="img" aria-label="Tree" onclick="chopTree(this,13)"><img class="sprite-img" src="assets/pine_tree.png" alt="" /></div>
-<div class="tree tree4" role="img" aria-label="Tree" onclick="chopTree(this,87)"><img class="sprite-img" src="assets/tree_green.png" alt="" /></div>
+<div class="tree tree1" role="img" aria-label="Tree" onclick="chopTree(this,8)">🌲</div>
+<div class="tree tree2" role="img" aria-label="Tree" onclick="chopTree(this,92)">🌲</div>
+<div class="tree tree3" role="img" aria-label="Tree" onclick="chopTree(this,13)">🌲</div>
+<div class="tree tree4" role="img" aria-label="Tree" onclick="chopTree(this,87)">🌲</div>
 
 <!-- ROCKS -->
 
-<div class="rock rock1" onclick="mineRock(this,30)"><img class="sprite-img" src="assets/rock_small.png" alt="" /></div>
-<div class="rock rock2" onclick="mineRock(this,70)"><img class="sprite-img" src="assets/rock_large.png" alt="" /></div>
-<div class="rock rock3" onclick="mineRock(this,33)"><img class="sprite-img" src="assets/rock_small.png" alt="" /></div>
-<div class="rock rock4" onclick="mineRock(this,67)"><img class="sprite-img" src="assets/rock_large.png" alt="" /></div>
+<div class="rock rock1" onclick="mineRock(this,30)">🪨</div>
+<div class="rock rock2" onclick="mineRock(this,70)">🪨</div>
+<div class="rock rock3" onclick="mineRock(this,33)">🪨</div>
+<div class="rock rock4" onclick="mineRock(this,67)">🪨</div>
 
 <!-- POND -->
 
-<div class="pond" role="img" aria-label="Village pond"><img class="sprite-img" src="assets/pond.png" alt="" /></div>
-
-
-<!-- V11 DECORATIVE SPRITES -->
-<div class="scenery-extra berry-scenery"><img class="sprite-img" src="assets/berry_bush.png" alt="Berry bush" /></div>
-<div class="scenery-extra garden-scenery"><img class="sprite-img" src="assets/garden.png" alt="Vegetable garden" /></div>
+<div class="pond" role="img" aria-label="Village pond"></div>
 
 <!-- FISH -->
 
@@ -525,7 +499,13 @@ button:disabled {
 <div class="villager-label" id="label1">
 👤 #1 • Village Leader
 </div>
-<img class="villager-sprite" id="villagerSprite1" src="assets/villager_idle_hat.png" alt="Village leader" />
+
+<div class="head"></div>
+<div class="body"></div>
+<div class="arm-left"></div>
+<div class="arm-right"></div>
+<div class="leg-left"></div>
+<div class="leg-right"></div>
 
 </div>
 
@@ -536,7 +516,13 @@ button:disabled {
 <div class="villager-label" id="label2">
 👤 #2 • Unemployed
 </div>
-<img class="villager-sprite" id="villagerSprite2" src="assets/villager_idle_green.png" alt="Villager 2" />
+
+<div class="head"></div>
+<div class="body"></div>
+<div class="arm-left"></div>
+<div class="arm-right"></div>
+<div class="leg-left"></div>
+<div class="leg-right"></div>
 
 </div>
 
@@ -547,29 +533,51 @@ button:disabled {
 <div class="villager-label" id="label3">
 👤 #3 • Unemployed
 </div>
-<img class="villager-sprite" id="villagerSprite3" src="assets/villager_idle_female_pink.png" alt="Villager 3" />
+
+<div class="head"></div>
+<div class="body"></div>
+<div class="arm-left"></div>
+<div class="arm-right"></div>
+<div class="leg-left"></div>
+<div class="leg-right"></div>
 
 </div>
 
 <!-- BUILDINGS -->
 
-<div class="house"><img class="sprite-img" src="assets/house_main.png" alt="" /></div>
+<div class="house">🏠</div>
 
-<div class="coop"><img class="sprite-img" src="assets/chicken_coop.png" alt="" /></div>
+<div class="coop">
+🐔🏠
+</div>
 
-<div class="kitchen"><img class="sprite-img" src="assets/kitchen.png" alt="" /></div>
+<div class="kitchen">
+🍳🏠
+</div>
 
-<div class="market"><img class="sprite-img" src="assets/market.png" alt="" /></div>
+<div class="market">
+🏪
+</div>
 
-<div class="hut" id="hut1"><img class="sprite-img" src="assets/hut.png" alt="" /></div>
+<div class="hut" id="hut1">
+🛖
+</div>
 
-<div class="hut" id="hut2"><img class="sprite-img" src="assets/hut.png" alt="" /></div>
+<div class="hut" id="hut2">
+🛖
+</div>
 
-<div class="smithy" id="smithy"><img class="sprite-img" src="assets/smithy.png" alt="" /></div>
+<div class="smithy" id="smithy">
+🔨🏠
+</div>
 
-<div class="lumberyard" id="lumberyard"><img class="sprite-img" src="assets/lumber_yard.png" alt="" /></div>
+<div class="lumberyard" id="lumberyard">
+🪵🏠
+</div>
 
-<div class="warehouse" id="warehouse"><img class="sprite-img" src="assets/warehouse.png" alt="" /></div>
+<div class="warehouse" id="warehouse">
+📦🏠
+</div>
 
 </div>
 
@@ -1162,31 +1170,7 @@ function startLeaderJob() {
 }
 /* VILLAGER LABELS */
 
-function updateVillagerSprites() {
-  const spriteForJob = (job, fallback) => {
-    const map = {
-      "Woodcutter": "chop_wood.png", "Miner": "mine_stone.png", "Fisher": "fish.png",
-      "Farmer": "plant_seeds.png", "Cook": "cook.png", "Builder": "build_repair.png",
-      "Merchant": "market_vendor.png", "Herder": "feed_animals.png",
-      "Animal Care": "feed_animals.png", "Egg Collector": "collect_eggs.png"
-    };
-    return map[job] ? "assets/" + map[job] : fallback;
-  };
-  const assignments = [
-    ["villagerSprite1", leaderJob, "assets/villager_idle_hat.png"],
-    ["villagerSprite2", villager2Job, "assets/villager_idle_green.png"],
-    ["villagerSprite3", villager3Job, "assets/villager_idle_female_pink.png"]
-  ];
-  assignments.forEach(([id, job, fallback]) => {
-    const img = document.getElementById(id);
-    if (!img) return;
-    img.src = job && job !== "None" ? spriteForJob(job, fallback) : fallback;
-    img.alt = job && job !== "None" ? job + " villager" : "Idle villager";
-  });
-}
-
 function updateVillagerLabels() {
-updateVillagerSprites();
 
 let job2 =
 villager2Job === "None"
