@@ -196,6 +196,39 @@ h1 {
     transform: rotate(65deg);
 }
 
+/* Stickfolk villager sprite */
+.villager-sprite {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 160px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* Hide the old stick-figure body parts */
+.stickman .head,
+.stickman .body,
+.stickman .arm-left,
+.stickman .arm-right,
+.stickman .leg-left,
+.stickman .leg-right,
+.stickman2 .head,
+.stickman2 .body,
+.stickman2 .arm-left,
+.stickman2 .arm-right,
+.stickman2 .leg-left,
+.stickman2 .leg-right,
+.stickman3 .head,
+.stickman3 .body,
+.stickman3 .arm-left,
+.stickman3 .arm-right,
+.stickman3 .leg-left,
+.stickman3 .leg-right {
+    display: none;
+}
+
 /* BUILDINGS */
 
 .house {
@@ -495,7 +528,7 @@ button:disabled {
 <!-- STICKFOLK 1 -->
 
 <div class="stickman" id="stickman">
-
+<img class="villager-sprite" src="assets/villager_idle.png" alt="">
 <div class="villager-label" id="label1">
 👤 #1 • Village Leader
 </div>
@@ -512,7 +545,7 @@ button:disabled {
 <!-- STICKFOLK 2 -->
 
 <div class="stickman2" id="stickman2">
-
+<img class="villager-sprite" src="assets/villager_idle.png" alt="">
 <div class="villager-label" id="label2">
 👤 #2 • Unemployed
 </div>
@@ -529,7 +562,7 @@ button:disabled {
 <!-- STICKFOLK 3 -->
 
 <div class="stickman3" id="stickman3">
-
+<img class="villager-sprite" src="assets/villager_idle.png" alt="">
 <div class="villager-label" id="label3">
 👤 #3 • Unemployed
 </div>
