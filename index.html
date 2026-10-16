@@ -1246,7 +1246,7 @@ function updateResourceGuide() {
     return `✅ #${number} ${job}: Working (+${amount} ${resourceName} every 10 seconds).`;
 }
 
- updateWorkforceAutomationStatus() {
+function updateWorkforceAutomationStatus() {
     const status = document.getElementById("workforceAutomationStatus");
     if (!status) return;
     status.innerHTML = [
