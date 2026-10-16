@@ -1858,7 +1858,7 @@ document.getElementById("jobStatus3").textContent =
 "Villager #3 is unemployed.";
 
 document.getElementById("message").textContent =
-"🛖 Your second hut is ready. Keep food in reserve to attract another Stickfolk.";
+"🏠 Your second house is ready. Keep food in reserve to attract another Stickfolk.";
 
 updateResources();
 
@@ -2320,12 +2320,12 @@ function checkPopulationGrowth() {
     if (!newcomerAvailable) return;
 
     if (food < 10) {
-        document.getElementById("hutStatus").textContent =
-            population === 1
-                ? "🛖 Your first hut is ready. A new Stickfolk may arrive at day's end when you have at least 10 food available."
-                : "🛖 Your second hut is ready. Another Stickfolk may arrive at day's end when you have at least 10 food available.";
-        return;
-    }
+    document.getElementById("hutStatus").textContent =
+        population === 1
+            ? "🏠 Your first house is ready. A new Stickfolk may arrive at day's end when you have at least 10 food available."
+            : "🏠 Your second house is ready. Another Stickfolk may arrive at day's end when you have at least 10 food available.";
+    return;
+}
 
     food -= 10;
     population += 1;
