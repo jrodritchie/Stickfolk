@@ -1223,7 +1223,7 @@ function updateResourceGuide() {
 }
 
 /* STORAGE-AWARE WORKER AUTOMATION */
- gatherForJob(job) {
+ function gatherForJob(job) {
     if (job === "Woodcutter" && wood < storageCapacity) {
         wood = Math.min(storageCapacity, wood + (axeUpgraded ? 8 : 5));
     } else if (job === "Miner" && stone < storageCapacity) {
