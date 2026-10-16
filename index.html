@@ -635,8 +635,8 @@ button:disabled {
 
 <!-- FISH -->
 
-<div class="fish fish1" onclick="gatherFish(this,7)">🐟</div>
-<div class="fish fish2" onclick="gatherFish(this,93)">🐟</div>
+<div class="fish fish1" onclick="(this,7)">🐟</div>
+<div class="fish fish2" onclick="(this,93)">🐟</div>
 
 <!-- STICKFOLK 1 -->
 
@@ -1632,46 +1632,37 @@ function mineRock(rock, position) {
 }
 
 
+
 /* FOOD */
 
- gatherFish(fish, position) {
+function gatherFish(fish, position) {
 
-villager.style.left =
-position + "%";
+    villager.style.left = position + "%";
 
-document.getElementById("message").textContent =
-"🎣 Your Stickfolk is gathering food...";
+    document.getElementById("message").textContent =
+        "🎣 Your Stickfolk is gathering food...";
 
-setTimeout(() {
+    setTimeout(() => {
 
-if (fishingUpgraded) {
+        if (fishingUpgraded) {
+            food += 6;
+            document.getElementById("message").textContent =
+                "🎣 Your upgraded fishing gear gathered 6 food!";
+        } else {
+            food += 3;
+            document.getElementById("message").textContent =
+                "🐟 Your Stickfolk gathered 3 food!";
+        }
 
-food += 6;
+        fish.style.visibility = "hidden";
 
-document.getElementById("message").textContent =
-"🎣 Your upgraded fishing gear gathered 6 food!";
+        updateResources();
 
-} else {
+        setTimeout(() => {
+            fish.style.visibility = "visible";
+        }, 5000);
 
-food += 3;
-
-document.getElementById("message").textContent =
-"🐟 Your Stickfolk gathered 3 food!";
-
-}
-
-fish.style.visibility = "hidden";
-
-updateResources();
-
-setTimeout(() {
-
-fish.style.visibility = "visible";
-
-},5000);
-
-},1000);
-
+    }, 1000);
 }
 
 /* KITCHEN */
