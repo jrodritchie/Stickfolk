@@ -1565,46 +1565,37 @@ document.getElementById("workforceStatus").innerHTML =
     updateResources();
 }
 
+
 /* WOOD */
 
- chopTree(tree, position) {
+function chopTree(tree, position) {
 
-villager.style.left =
-position + "%";
+    villager.style.left = position + "%";
 
-document.getElementById("message").textContent =
-"🪓 Your Stickfolk is chopping wood...";
+    document.getElementById("message").textContent =
+        "🪓 Your Stickfolk is chopping wood...";
 
-setTimeout(() {
+    setTimeout(() => {
 
-if (axeUpgraded) {
+        if (axeUpgraded) {
+            wood += 8;
+            document.getElementById("message").textContent =
+                "🪓 Your upgraded axe gathered 8 wood!";
+        } else {
+            wood += 5;
+            document.getElementById("message").textContent =
+                "🪵 Your Stickfolk gathered 5 wood!";
+        }
 
-wood += 8;
+        tree.style.visibility = "hidden";
 
-document.getElementById("message").textContent =
-"🪓 Your upgraded axe gathered 8 wood!";
+        updateResources();
 
-} else {
+        setTimeout(() => {
+            tree.style.visibility = "visible";
+        }, 5000);
 
-wood += 5;
-
-document.getElementById("message").textContent =
-"🪵 Your Stickfolk gathered 5 wood!";
-
-}
-
-tree.style.visibility = "hidden";
-
-updateResources();
-
-setTimeout(() {
-
-tree.style.visibility = "visible";
-
-},5000);
-
-},1000);
-
+    }, 1000);
 }
 
 /* STONE */
