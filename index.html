@@ -1233,7 +1233,7 @@ function updateResourceGuide() {
     }
 }
 
- workerAutomationLine(number, job) {
+ function workerAutomationLine(number, job) {
     if (number > population) return "";
     if (job === "None") return `👤 #${number}: Unassigned — choose a job to start automatic gathering.`;
 
