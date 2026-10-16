@@ -1598,47 +1598,39 @@ function chopTree(tree, position) {
     }, 1000);
 }
 
+
 /* STONE */
 
- mineRock(rock, position) {
+function mineRock(rock, position) {
 
-villager.style.left =
-position + "%";
+    villager.style.left = position + "%";
 
-document.getElementById("message").textContent =
-"⛏️ Your Stickfolk is mining stone...";
+    document.getElementById("message").textContent =
+        "⛏️ Your Stickfolk is mining stone...";
 
-setTimeout(() {
+    setTimeout(() => {
 
-if (pickaxeUpgraded) {
+        if (pickaxeUpgraded) {
+            stone += 6;
+            document.getElementById("message").textContent =
+                "⛏️ Your upgraded pickaxe gathered 6 stone!";
+        } else {
+            stone += 3;
+            document.getElementById("message").textContent =
+                "🪨 Your Stickfolk gathered 3 stone!";
+        }
 
-stone += 6;
+        rock.style.visibility = "hidden";
 
-document.getElementById("message").textContent =
-"⛏️ Your upgraded pickaxe gathered 6 stone!";
+        updateResources();
 
-} else {
+        setTimeout(() => {
+            rock.style.visibility = "visible";
+        }, 5000);
 
-stone += 3;
-
-document.getElementById("message").textContent =
-"🪨 Your Stickfolk gathered 3 stone!";
-
+    }, 1000);
 }
 
-rock.style.visibility = "hidden";
-
-updateResources();
-
-setTimeout(() {
-
-rock.style.visibility = "visible";
-
-},5000);
-
-},1000);
-
-}
 
 /* FOOD */
 
