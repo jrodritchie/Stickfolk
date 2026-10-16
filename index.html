@@ -698,7 +698,7 @@ button:disabled {
 <div class="kitchen" role="img" aria-label="Village kitchen"></div>
 
 <div class="market" aria-label="Village market"></div>
-<div class="hut" id="hut1">
+<div class="house" id="hut1" role="img" aria-label="Village house"></div>
 🛖
 </div>
 
@@ -1751,7 +1751,7 @@ document.getElementById("buildHutButton");
 if (hutBuilt) {
 
 button.disabled = true;
-button.textContent = "🛖 First Hut Built!";
+button.textContent = "🏠 First House Built!";
 
 } else {
 
@@ -1816,7 +1816,7 @@ return;
 if (hut2Built) {
 
 button.disabled = true;
-button.textContent = "🛖 Second Hut Built!";
+button.textContent = "🏠 Second House Built!";
 
 return;
 
