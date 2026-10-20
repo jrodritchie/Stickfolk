@@ -612,7 +612,7 @@ button:disabled {
 </div>
 <!-- SMITHY ON MAP -->
 <div class="smithy" id="smithy" role="img" aria-label="Village smithy"></div>
-
+<div class="lumberyard" id="lumberyard" role="img" aria-label="Lumber yard"></div>
 
 <!-- ROCKS -->
 
@@ -710,7 +710,6 @@ button:disabled {
 
 
 
-<div class="lumberyard" id="lumberyard" role="img" aria-label="Lumber yard"></div>
 
 
 <div class="warehouse" id="warehouse" role="img" aria-label="Village warehouse"></div>
@@ -2348,49 +2347,37 @@ function updateLumberyardButtons() {
         : "🔒 Build the Lumber Yard first";
 }
 
+
 function buildLumberyard() {
+
     if (lumberyardBuilt) {
-        document.getElementById("lumberyardStatus").textContent = "Already built!";
+        document.getElementById("lumberyardStatus").textContent =
+            "Already built!";
         return;
     }
 
-    if (!smithyBuilt || population < 2 || wood < 40 || stone < 25) {
+    if (!smithyBuilt || population < 2) {
+        document.getElementById("lumberyardStatus").textContent =
+            "Build the Smithy and reach 2 villagers first.";
+        return;
+    }
+
+    if (wood < 40 || stone < 25) {
         document.getElementById("lumberyardStatus").textContent =
             "Need 40 Wood and 25 Stone to build it.";
         return;
     }
 
-    wood -= 40;
-    stone -= 25;
-    lumberyardBuilt = true;
-    document.getElementById("lumberyard").style.display = "block";
-    document.getElementById("lumberyardStatus").textContent =
-        "Ready to process wood into lumber!";
+    // Start placement mode. Do not spend resources yet.
+    window.placementMode = "lumberyard";
+
+    document.getElementById("placementStatus").textContent =
+        "🪵 Choose a spot for your Lumber Yard — click the map to place it.";
+
+    document.getElementById("placementStatus").style.display = "block";
+
     document.getElementById("message").textContent =
-        "🪵 The Lumber Yard is built! You can now make lumber.";
-    updateResources();
-}
-
-function processLumber() {
-    if (!lumberyardBuilt) {
-        document.getElementById("lumberyardStatus").textContent =
-            "Build the Lumber Yard first.";
-        return;
-    }
-
-    if (wood < 10) {
-        document.getElementById("lumberyardStatus").textContent =
-            "You need 10 Wood to make 5 Lumber.";
-        return;
-    }
-
-    wood -= 10;
-    lumber += 5;
-    document.getElementById("lumberyardStatus").textContent =
-        "Processed 10 Wood into 5 Lumber!";
-    document.getElementById("message").textContent =
-        "🪵 The Lumber Yard produced 5 Lumber.";
-    updateResources();
+        "Choose a spot on the map for your Lumber Yard.";
 }
 
 /* WAREHOUSE AND STORAGE */
@@ -2689,7 +2676,8 @@ document.querySelectorAll(".villager-sprite").forEach((sprite, index) => {
     sprite.src = villagerSprites[index % villagerSprites.length];
 }); 
 
-/* HOUSE AND SMITHY PLACEMENT */
+
+/* HOUSE, SMITHY AND LUMBER YARD PLACEMENT */
 
 document.getElementById("game").addEventListener("click", function(event) {
 
@@ -2698,7 +2686,8 @@ document.getElementById("game").addEventListener("click", function(event) {
     if (
         mode !== "firstHouse" &&
         mode !== "secondHouse" &&
-        mode !== "smithy"
+        mode !== "smithy" &&
+        mode !== "lumberyard"
     ) {
         return;
     }
@@ -2710,9 +2699,13 @@ document.getElementById("game").addEventListener("click", function(event) {
 
     const isSecondHouse = mode === "secondHouse";
     const isSmithy = mode === "smithy";
+    const isLumberyard = mode === "lumberyard";
 
-    const costWood = isSmithy ? 30 : (isSecondHouse ? 25 : 20);
-    const costStone = isSmithy ? 20 : (isSecondHouse ? 15 : 10);
+    const costWood = isLumberyard ? 40 :
+        (isSmithy ? 30 : (isSecondHouse ? 25 : 20));
+
+    const costStone = isLumberyard ? 25 :
+        (isSmithy ? 20 : (isSecondHouse ? 15 : 10));
 
     if (wood < costWood || stone < costStone) {
         document.getElementById("message").textContent =
@@ -2725,15 +2718,15 @@ document.getElementById("game").addEventListener("click", function(event) {
         updateHutButton();
         updateHut2Button();
         updateSmithyButtons();
+        updateLumberyardButtons();
         return;
     }
 
     const map = document.getElementById("game");
     const rect = map.getBoundingClientRect();
 
-    const elementId = isSmithy
-        ? "smithy"
-        : (isSecondHouse ? "hut2" : "hut1");
+    const elementId = isLumberyard ? "lumberyard" :
+        (isSmithy ? "smithy" : (isSecondHouse ? "hut2" : "hut1"));
 
     const building = document.getElementById(elementId);
 
@@ -2759,7 +2752,16 @@ document.getElementById("game").addEventListener("click", function(event) {
     wood -= costWood;
     stone -= costStone;
 
-    if (isSmithy) {
+    if (isLumberyard) {
+        lumberyardBuilt = true;
+
+        document.getElementById("lumberyardStatus").textContent =
+            "Ready to process wood into lumber!";
+
+        document.getElementById("message").textContent =
+            "🪵 The Lumber Yard is built! You can now make lumber.";
+
+    } else if (isSmithy) {
         smithyBuilt = true;
 
         document.getElementById("smithyStatus").textContent =
@@ -2767,9 +2769,6 @@ document.getElementById("game").addEventListener("click", function(event) {
 
         document.getElementById("message").textContent =
             "🔨 Your Smithy has been built!";
-
-        updateSmithyButtons();
-        updateLumberyardButtons();
 
     } else if (isSecondHouse) {
         hut2Built = true;
@@ -2789,15 +2788,16 @@ document.getElementById("game").addEventListener("click", function(event) {
     }
 
     window.placementMode = null;
-
     document.getElementById("placementStatus").style.display = "none";
 
     updateResources();
     updateHutButton();
     updateHut2Button();
     updateSmithyButtons();
+    updateLumberyardButtons();
 
 });
+
 
 
 </script>
