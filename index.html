@@ -1516,7 +1516,7 @@ function startChickenProduction(seconds = 20) {
     }, 1000);
 }
 
- feedChicken() {
+function feedChicken() {
     if (coopBuilt && !chickenFed && food >= 5) {
         food -= 5;
         document.getElementById("message").textContent = "🐔 The chicken has been fed!";
@@ -1534,7 +1534,7 @@ function startChickenProduction(seconds = 20) {
     }
 }
 
- updateCoopButton() {
+function updateCoopButton() {
     const button = document.getElementById("upgradeCoopButton");
     if (!button) return;
 
@@ -1552,7 +1552,7 @@ function startChickenProduction(seconds = 20) {
     }
 }
 
- upgradeCoop() {
+function upgradeCoop() {
     if (!coopBuilt || coopLevel >= 2 || chickenCount >= 2 || population < 2 || wood < 15 || stone < 10) return;
 
     wood -= 15;
