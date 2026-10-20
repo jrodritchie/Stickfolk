@@ -2769,17 +2769,17 @@ if (
     return; // Keep placement mode active; spend nothing.
 }
 
-// Check for overlap with existing buildings.
-const buildingIds = ["hut1", "hut2", "smithy", "lumberyard"];
 
-for (const id of buildingIds) {
-    const other = document.getElementById(id);
+ // Check for overlap with every existing building on the map.
+const buildingSelectors = ".house, #hut1, #hut2, #smithy, #lumberyard";
+const existingBuildings = map.querySelectorAll(buildingSelectors);
 
-    if (!other || other === building) {
+for (const other of existingBuildings) {
+    if (other === building) {
         continue;
     }
 
-    // Ignore buildings that have not been placed yet.
+    // Ignore buildings that are hidden and not currently on the map.
     if (getComputedStyle(other).display === "none") {
         continue;
     }
