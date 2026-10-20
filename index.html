@@ -1409,7 +1409,7 @@ function updateCoopBuildButton() {
     }
 }
 
- buildCoop() {
+function buildCoop() {
     if (coopBuilt || !lumberyardBuilt || population < 2 || lumber < 20 || wood < 10) {
         updateCoopBuildButton();
         return;
