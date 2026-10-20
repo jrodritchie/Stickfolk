@@ -1799,11 +1799,15 @@ return;
 wood -= 25;
 stone -= 15;
 
-hut2Built = true;
-populationCapacity = 3;
+window.placementMode = "secondHouse";
 
-document.getElementById("hut2").style.display =
-    "block";
+document.getElementById("placementStatus").textContent =
+    "🏡 Choose a spot for your second house — click the map to place it.";
+
+document.getElementById("placementStatus").style.display = "block";
+
+document.getElementById("message").textContent =
+    "Choose a spot on the map for your second house.";
 
 document.getElementById("stickman3").style.display =
     "none";
@@ -2700,9 +2704,12 @@ document.querySelectorAll(".villager-sprite").forEach((sprite, index) => {
 
 document.getElementById("game").addEventListener("click", function(event) {
 
-    if (window.placementMode !== "firstHouse") {
-        return;
-    }
+   if (
+    window.placementMode !== "firstHouse" &&
+    window.placementMode !== "secondHouse"
+) {
+    return;
+}
 
     // Don't place the house when clicking a resource or villager.
     if (event.target.closest(".tree, .rock, .fish, .stickman")) {
