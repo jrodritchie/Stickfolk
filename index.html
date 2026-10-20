@@ -1784,46 +1784,32 @@ wood < 25 || stone < 15;
 
 }
 
+
 /* BUILD SECOND HUT */
 
 function buildHut2() {
 
-if (!hutBuilt) {
-return;
-}
+    if (!hutBuilt || hut2Built) {
+        return;
+    }
 
-if (wood < 25 || stone < 15) {
-return;
-}
+    if (wood < 25 || stone < 15) {
+        return;
+    }
 
-wood -= 25;
-stone -= 15;
+    // Start placement without spending resources
+    window.placementMode = "secondHouse";
 
-window.placementMode = "secondHouse";
+    document.getElementById("placementStatus").textContent =
+        "🏡 Choose a spot for your second house — click the map to place it.";
 
-document.getElementById("placementStatus").textContent =
-    "🏡 Choose a spot for your second house — click the map to place it.";
+    document.getElementById("placementStatus").style.display = "block";
 
-document.getElementById("placementStatus").style.display = "block";
-
-document.getElementById("message").textContent =
-    "Choose a spot on the map for your second house.";
-
-document.getElementById("stickman3").style.display =
-    "none";
-
-document.getElementById("hutStatus").textContent =
-    "🏠 Another house is ready. A Stickfolk may move in soon.";
-
-document.getElementById("jobStatus3").textContent =
-"Villager #3 is unemployed.";
-
-document.getElementById("message").textContent =
-"🏠 Your second house is ready. Keep food in reserve to attract another Stickfolk.";
-
-updateResources();
+    document.getElementById("message").textContent =
+        "Choose a spot on the map for your second house.";
 
 }
+
 
 /* JOB BUTTONS */
 
