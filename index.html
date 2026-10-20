@@ -1666,8 +1666,7 @@ function gatherFish(fish, position) {
 
 /* KITCHEN */
 
- cookFood() {
-
+function cookFood() {
 if (eggs < 5) {
 document.getElementById("kitchenStatus").textContent =
     `Needs ${5 - eggs} more Egg${5 - eggs === 1 ? "" : "s"}.`;
@@ -1691,7 +1690,7 @@ updateResources();
 
 /* MARKET */
 
- sellFood() {
+function sellFood() {
 
 if (prepared < 5) {
 document.getElementById("marketStatus").textContent =
