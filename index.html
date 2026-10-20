@@ -2702,53 +2702,91 @@ document.querySelectorAll(".villager-sprite").forEach((sprite, index) => {
 }); 
 /* FIRST HOUSE PLACEMENT */
 
+
+/* HOUSE PLACEMENT */
+
 document.getElementById("game").addEventListener("click", function(event) {
 
-   if (
-    window.placementMode !== "firstHouse" &&
-    window.placementMode !== "secondHouse"
-) {
-    return;
-}
+    const mode = window.placementMode;
 
-    // Don't place the house when clicking a resource or villager.
+    if (mode !== "firstHouse" && mode !== "secondHouse") {
+        return;
+    }
+
+    // Ignore clicks on resources and villagers.
     if (event.target.closest(".tree, .rock, .fish, .stickman")) {
         return;
     }
 
-    if (wood < 20 || stone < 10) {
+    const isSecondHouse = mode === "secondHouse";
+
+    const costWood = isSecondHouse ? 25 : 20;
+    const costStone = isSecondHouse ? 15 : 10;
+
+    if (wood < costWood || stone < costStone) {
         document.getElementById("message").textContent =
-            "You need 20 wood and 10 stone to build your first house.";
+            `You need ${costWood} wood and ${costStone} stone.`;
+
         window.placementMode = null;
+        document.getElementById("placementStatus").style.display = "none";
+        updateResources();
+        updateHutButton();
+        updateHut2Button();
         return;
     }
 
     const map = document.getElementById("game");
-    const house = document.getElementById("hut1");
     const rect = map.getBoundingClientRect();
 
+    const house = document.getElementById(
+        isSecondHouse ? "hut2" : "hut1"
+    );
+
+    if (!house) {
+        document.getElementById("message").textContent =
+            "House element not found. Check the hut2 HTML element.";
+
+        window.placementMode = null;
+        return;
+    }
+
+    // Place the correct house at the clicked position.
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    wood -= 20;
-    stone -= 10;
-
+    house.style.position = "absolute";
     house.style.left = x + "px";
     house.style.top = y + "px";
-    house.style.position = "absolute";
     house.style.display = "block";
 
-    hutBuilt = true;
+    wood -= costWood;
+    stone -= costStone;
+
+    if (isSecondHouse) {
+        hut2Built = true;
+        populationCapacity = 3;
+
+        document.getElementById("message").textContent =
+            "🏡 Your second house is built! Population capacity increased.";
+
+        document.getElementById("hutStatus").textContent =
+            "🏠 Your second house is ready for another Stickfolk.";
+    } else {
+        hutBuilt = true;
+
+        document.getElementById("message").textContent =
+            "🏠 Your first house is built!";
+    }
+
     window.placementMode = null;
 
     document.getElementById("placementStatus").style.display = "none";
-    document.getElementById("message").textContent =
-        "🏠 Your first house is built!";
 
     updateResources();
     updateHutButton();
     updateHut2Button();
-});    
+});
+
 </script>
 
 </body>
