@@ -2730,18 +2730,72 @@ document.getElementById("game").addEventListener("click", function(event) {
 
     const building = document.getElementById(elementId);
 
-    if (!building) {
-        document.getElementById("message").textContent =
-            `Building element "${elementId}" not found. Check your HTML.`;
+    
+if (!building) {
+    document.getElementById("message").textContent =
+        `Building element "${elementId}" not found. Check your HTML.`;
 
-        window.placementMode = null;
-        document.getElementById("placementStatus").style.display = "none";
-        return;
+    window.placementMode = null;
+    document.getElementById("placementStatus").style.display = "none";
+    return;
+}
+
+// Get the proposed position and building dimensions.
+const x = event.clientX - rect.left - map.clientLeft;
+const y = event.clientY - rect.top - map.clientTop;
+
+const width = parseFloat(getComputedStyle(building).width);
+const height = parseFloat(getComputedStyle(building).height);
+
+// Reject positions outside the map.
+if (
+    x < 0 ||
+    y < 0 ||
+    x + width > map.clientWidth ||
+    y + height > map.clientHeight
+) {
+    document.getElementById("message").textContent =
+        "🌿 That spot is outside the map. Choose another spot.";
+
+    return; // Keep placement mode active; spend nothing.
+}
+
+// Check for overlap with existing buildings.
+const buildingIds = ["hut1", "hut2", "smithy", "lumberyard"];
+
+for (const id of buildingIds) {
+    const other = document.getElementById(id);
+
+    if (!other || other === building) {
+        continue;
     }
 
-    // Position the building where the player clicked.
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    // Ignore buildings that have not been placed yet.
+    if (getComputedStyle(other).display === "none") {
+        continue;
+    }
+
+    const otherX = other.offsetLeft;
+    const otherY = other.offsetTop;
+    const otherWidth = other.offsetWidth;
+    const otherHeight = other.offsetHeight;
+
+    const overlaps =
+        x < otherX + otherWidth &&
+        x + width > otherX &&
+        y < otherY + otherHeight &&
+        y + height > otherY;
+
+    if (overlaps) {
+        document.getElementById("message").textContent =
+            "🏗️ That spot overlaps another building. Try somewhere else.";
+
+        return; // Keep placement mode active; spend nothing.
+    }
+}
+
+// Position the building where the player clicked.
+
 
     building.style.position = "absolute";
     building.style.left = x + "px";
