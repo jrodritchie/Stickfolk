@@ -2135,30 +2135,30 @@ coins < 10;
 
 /* BUILD SMITHY */
 
+
 function buildSmithy() {
 
-if (population < 2 || wood < 30 || stone < 20) {
-return;
-}
+    if (population < 2 || smithyBuilt) {
+        return;
+    }
 
-wood -= 30;
-stone -= 20;
+    if (wood < 30 || stone < 20) {
+        return;
+    }
 
-smithyBuilt = true;
+    // Start placement without spending resources
+    window.placementMode = "smithy";
 
-document.getElementById("smithy").style.display =
-"block";
+    document.getElementById("placementStatus").textContent =
+        "🔨 Choose a spot for your Smithy — click the map to place it.";
 
-document.getElementById("smithyStatus").textContent =
-"🔨 Smithy is ready!";
-updateLumberyardButtons();
+    document.getElementById("placementStatus").style.display = "block";
 
-document.getElementById("message").textContent =
-"🔨 Your village built a Smithy!";
-
-updateResources();
+    document.getElementById("message").textContent =
+        "Choose a spot on the map for your Smithy.";
 
 }
+
 
 /* AXE */
 
@@ -2686,16 +2686,18 @@ const villagerSprites = [
 document.querySelectorAll(".villager-sprite").forEach((sprite, index) => {
     sprite.src = villagerSprites[index % villagerSprites.length];
 }); 
-/* FIRST HOUSE PLACEMENT */
 
-
-/* HOUSE PLACEMENT */
+/* HOUSE AND SMITHY PLACEMENT */
 
 document.getElementById("game").addEventListener("click", function(event) {
 
     const mode = window.placementMode;
 
-    if (mode !== "firstHouse" && mode !== "secondHouse") {
+    if (
+        mode !== "firstHouse" &&
+        mode !== "secondHouse" &&
+        mode !== "smithy"
+    ) {
         return;
     }
 
@@ -2705,9 +2707,10 @@ document.getElementById("game").addEventListener("click", function(event) {
     }
 
     const isSecondHouse = mode === "secondHouse";
+    const isSmithy = mode === "smithy";
 
-    const costWood = isSecondHouse ? 25 : 20;
-    const costStone = isSecondHouse ? 15 : 10;
+    const costWood = isSmithy ? 30 : (isSecondHouse ? 25 : 20);
+    const costStone = isSmithy ? 20 : (isSecondHouse ? 15 : 10);
 
     if (wood < costWood || stone < costStone) {
         document.getElementById("message").textContent =
@@ -2715,40 +2718,58 @@ document.getElementById("game").addEventListener("click", function(event) {
 
         window.placementMode = null;
         document.getElementById("placementStatus").style.display = "none";
+
         updateResources();
         updateHutButton();
         updateHut2Button();
+        updateSmithyButtons();
         return;
     }
 
     const map = document.getElementById("game");
     const rect = map.getBoundingClientRect();
 
-    const house = document.getElementById(
-        isSecondHouse ? "hut2" : "hut1"
-    );
+    const elementId = isSmithy
+        ? "smithy"
+        : (isSecondHouse ? "hut2" : "hut1");
 
-    if (!house) {
+    const building = document.getElementById(elementId);
+
+    if (!building) {
         document.getElementById("message").textContent =
-            "House element not found. Check the hut2 HTML element.";
+            `Building element "${elementId}" not found. Check your HTML.`;
 
         window.placementMode = null;
+        document.getElementById("placementStatus").style.display = "none";
         return;
     }
 
-    // Place the correct house at the clicked position.
+    // Position the building where the player clicked.
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    house.style.position = "absolute";
-    house.style.left = x + "px";
-    house.style.top = y + "px";
-    house.style.display = "block";
+    building.style.position = "absolute";
+    building.style.left = x + "px";
+    building.style.top = y + "px";
+    building.style.display = "block";
 
+    // Charge resources only after placement succeeds.
     wood -= costWood;
     stone -= costStone;
 
-    if (isSecondHouse) {
+    if (isSmithy) {
+        smithyBuilt = true;
+
+        document.getElementById("smithyStatus").textContent =
+            "🔨 Smithy is ready!";
+
+        document.getElementById("message").textContent =
+            "🔨 Your Smithy has been built!";
+
+        updateSmithyButtons();
+        updateLumberyardButtons();
+
+    } else if (isSecondHouse) {
         hut2Built = true;
         populationCapacity = 3;
 
@@ -2757,6 +2778,7 @@ document.getElementById("game").addEventListener("click", function(event) {
 
         document.getElementById("hutStatus").textContent =
             "🏠 Your second house is ready for another Stickfolk.";
+
     } else {
         hutBuilt = true;
 
@@ -2771,7 +2793,10 @@ document.getElementById("game").addEventListener("click", function(event) {
     updateResources();
     updateHutButton();
     updateHut2Button();
+    updateSmithyButtons();
+
 });
+
 
 </script>
 
