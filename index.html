@@ -2698,6 +2698,52 @@ const villagerSprites = [
 
 document.querySelectorAll(".villager-sprite").forEach((sprite, index) => {
     sprite.src = villagerSprites[index % villagerSprites.length];
+}); 
+/* FIRST HOUSE PLACEMENT */
+
+document.getElementById("game").addEventListener("click", function(event) {
+
+    if (window.placementMode !== "firstHouse") {
+        return;
+    }
+
+    // Don't place the house when clicking a resource or villager.
+    if (event.target.closest(".tree, .rock, .fish, .stickman")) {
+        return;
+    }
+
+    if (wood < 20 || stone < 10) {
+        document.getElementById("message").textContent =
+            "You need 20 wood and 10 stone to build your first house.";
+        window.placementMode = null;
+        return;
+    }
+
+    const map = document.getElementById("game");
+    const house = document.getElementById("hut1");
+    const rect = map.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    wood -= 20;
+    stone -= 10;
+
+    house.style.left = x + "px";
+    house.style.top = y + "px";
+    house.style.position = "absolute";
+    house.style.display = "block";
+
+    hutBuilt = true;
+    window.placementMode = null;
+
+    document.getElementById("placementStatus").style.display = "none";
+    document.getElementById("message").textContent =
+        "🏠 Your first house is built!";
+
+    updateResources();
+    updateHutButton();
+    updateHut2Button();
 });    
 </script>
 
