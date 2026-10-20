@@ -340,6 +340,7 @@ h1 {
     background-repeat: no-repeat;
     background-position: center;
     display: none;
+    z-index: 5;
 }
 
 
@@ -444,12 +445,12 @@ button:disabled {
 
 /* V10 VISUAL VILLAGE MAP: decorative scenery only; game mechanics stay unchanged */
 .village-map {
+    position: relative;
     height: 540px;
     min-height: 500px;
     background: linear-gradient(180deg, #b9df91 0%, #d4e9a7 55%, #a8d17c 100%);
     border-top: 5px solid #6f9b4c;
     border-bottom: 5px solid #6f9b4c;
-   
     box-shadow: inset 0 0 0 5px rgba(255,255,255,.15);
 }
 
@@ -609,6 +610,8 @@ button:disabled {
 <div class="tree tree4" role="img" aria-label="Tree" onclick="chopTree(this,87)">
     <img src="assets/pine.png" alt="" class="map-sprite">
 </div>
+<!-- SMITHY ON MAP -->
+<div class="smithy" id="smithy" role="img" aria-label="Village smithy"></div>
 
 
 <!-- ROCKS -->
@@ -704,7 +707,6 @@ button:disabled {
 </div>
 
 
-<div class="smithy" id="smithy" role="img" aria-label="Village smithy"></div>
 
 
 
