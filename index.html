@@ -362,8 +362,8 @@ h1 {
 
 .warehouse {
     position: absolute;
-    right: 5%;
-    bottom: 25px;
+    left: 0;
+    top: 0;
     width: 120px;
     height: 120px;
     background-image: url("assets/warehouse.png");
@@ -2425,21 +2425,30 @@ function updateWarehouseButtons() {
     }
 }
 
+
 function buildWarehouse() {
-    if (warehouseBuilt || !lumberyardBuilt || population < 2 || wood < 30 || stone < 15) {
+    if (
+        warehouseBuilt ||
+        !lumberyardBuilt ||
+        population < 2 ||
+        wood < 30 ||
+        stone < 15
+    ) {
         updateWarehouseButtons();
         return;
     }
 
-    wood -= 30;
-    stone -= 15;
-    warehouseBuilt = true;
-    warehouseLevel = 1;
-    storageCapacity = baseStorageCapacity + warehouseStorageBonus;
-    document.getElementById("warehouse").style.display = "block";
-    document.getElementById("message").textContent = "📦 The Warehouse is built! Each stored resource can now hold 200.";
-    updateResources();
+    window.placementMode = "warehouse";
+
+    document.getElementById("placementStatus").textContent =
+        "📦 Choose a spot for your warehouse, or press Escape to cancel.";
+
+    document.getElementById("placementStatus").style.display = "block";
+
+    document.getElementById("message").textContent =
+        "📦 Click an open spot on the map to place your warehouse.";
 }
+
 
 function upgradeWarehouse() {
     if (!warehouseBuilt || warehouseLevel >= maxWarehouseLevel || wood < 30 || stone < 15 || lumber < 10) {
@@ -2692,28 +2701,34 @@ document.getElementById("game").addEventListener("click", function(event) {
     const mode = window.placementMode;
 
     if (
-        mode !== "firstHouse" &&
-        mode !== "secondHouse" &&
-        mode !== "smithy" &&
-        mode !== "lumberyard"
-    ) {
-        return;
-    }
+    mode !== "firstHouse" &&
+    mode !== "secondHouse" &&
+    mode !== "smithy" &&
+    mode !== "lumberyard" &&
+    mode !== "warehouse"
+) {
+    return;
+}
 
     // Ignore clicks on resources and villagers.
     if (event.target.closest(".tree, .rock, .fish, .stickman")) {
         return;
     }
 
-    const isSecondHouse = mode === "secondHouse";
-    const isSmithy = mode === "smithy";
-    const isLumberyard = mode === "lumberyard";
+    
+const isSecondHouse = mode === "secondHouse";
+const isSmithy = mode === "smithy";
+const isLumberyard = mode === "lumberyard";
+const isWarehouse = mode === "warehouse";
 
-    const costWood = isLumberyard ? 40 :
-        (isSmithy ? 30 : (isSecondHouse ? 25 : 20));
+const costWood = isWarehouse ? 30 :
+    (isLumberyard ? 40 :
+    (isSmithy ? 30 : (isSecondHouse ? 25 : 20)));
 
-    const costStone = isLumberyard ? 25 :
-        (isSmithy ? 20 : (isSecondHouse ? 15 : 10));
+const costStone = isWarehouse ? 15 :
+    (isLumberyard ? 25 :
+    (isSmithy ? 20 : (isSecondHouse ? 15 : 10)));
+
 
     if (wood < costWood || stone < costStone) {
         document.getElementById("message").textContent =
