@@ -2823,8 +2823,8 @@ const gridSize = 20;
 const width = parseFloat(getComputedStyle(building).width);
 const height = parseFloat(getComputedStyle(building).height);
 
-const x = Math.round(clickX / gridSize) * gridSize;
-const y = Math.round(clickY / gridSize) * gridSize;
+const x = Math.round((clickX - width / 2) / gridSize) * gridSize;
+const y = Math.round((clickY - height / 2) / gridSize) * gridSize;
 
 
 
