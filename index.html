@@ -2435,7 +2435,7 @@ function updateWarehouseButtons() {
             : population < 2
                 ? "Locked: reach 2 villagers first."
                 : (wood < 30 || stone < 15
-                    ? `Unlocked — needs 30 Wood and 15 Stone (you have ${wood} Wood and ${stone} Stone).`
+                    ? `Unlocked — needs 40 Wood and 20 Stone (you have ${wood} Wood and ${stone} Stone).`
                     : "Ready to build! Storage will increase to 200 per resource.");
     } else if (warehouseLevel >= maxWarehouseLevel) {
         status.textContent = `Warehouse fully expanded. Capacity: ${storageCapacity} per resource.`;
@@ -2450,8 +2450,8 @@ function buildWarehouse() {
         warehouseBuilt ||
         !lumberyardBuilt ||
         population < 2 ||
-        wood < 30 ||
-        stone < 15
+        wood < 40 ||
+        stone < 20
     ) {
         updateWarehouseButtons();
         return;
