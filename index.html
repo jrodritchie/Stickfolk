@@ -2748,8 +2748,12 @@ const costStone = isWarehouse ? 15 :
     const map = document.getElementById("game");
     const rect = map.getBoundingClientRect();
 
-    const elementId = isLumberyard ? "lumberyard" :
-        (isSmithy ? "smithy" : (isSecondHouse ? "hut2" : "hut1"));
+    
+const elementId = isWarehouse ? "warehouse" :
+    (isLumberyard ? "lumberyard" :
+    (isSmithy ? "smithy" :
+    (isSecondHouse ? "hut2" : "hut1")));
+
 
     const building = document.getElementById(elementId);
 
