@@ -2750,10 +2750,9 @@ const costWood = isWarehouse ? 30 :
     (isSmithy ? 30 : (isSecondHouse ? 25 : 20))));
 
 const costStone = isWarehouse ? 15 :
+    (isCoop ? 0 :
     (isLumberyard ? 25 :
-    (isSmithy ? 20 : (isSecondHouse ? 15 : 10)));
-
-const costLumber = isCoop ? 20 : 0;
+    (isSmithy ? 20 : (isSecondHouse ? 15 : 10))));
 
 
     if (
