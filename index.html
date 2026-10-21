@@ -2744,17 +2744,17 @@ const isWarehouse = mode === "warehouse";
 const isCoop = mode === "coop";
 
 
-const costWood = isWarehouse ? 30 :
-    (isCoop ? 10 :
-    (isLumberyard ? 40 :
-    (isSmithy ? 30 : (isSecondHouse ? 25 : 20))));
+const costWood = isWarehouse ? 40 :
+    (isCoop ? 15 :
+    (isLumberyard ? 50 :
+    (isSmithy ? 30 : (isSecondHouse ? 20 : 20))));
 
-const costStone = isWarehouse ? 15 :
+const costStone = isWarehouse ? 20 :
     (isCoop ? 0 :
-    (isLumberyard ? 25 :
-    (isSmithy ? 20 : (isSecondHouse ? 15 : 10))));
+    (isLumberyard ? 30 :
+    (isSmithy ? 20 : (isSecondHouse ? 10 : 10))));
     
-    const costLumber = isCoop ? 20 : 0;
+    const costLumber = isCoop ? 15 : 0;
 
 
     if (
