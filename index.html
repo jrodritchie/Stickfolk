@@ -2989,7 +2989,90 @@ if (isCoop) {
 });
 
 
+/* BUILDING PLACEMENT PREVIEW */
 
+const buildingPreview = document.getElementById("buildingPreview");
+const placementMap = document.getElementById("game");
+
+let previewMode = null;
+
+placementMap.addEventListener("mousemove", function(event) {
+    const mode = window.placementMode;
+
+    if (!mode || ![
+        "firstHouse", "secondHouse", "smithy",
+        "lumberyard", "warehouse", "coop"
+    ].includes(mode)) {
+        buildingPreview.style.display = "none";
+        previewMode = null;
+        return;
+    }
+
+    const elementId = mode === "firstHouse" ? "hut1" :
+        mode === "secondHouse" ? "hut2" : mode;
+
+    const building = document.getElementById(elementId);
+
+    if (!building) {
+        buildingPreview.style.display = "none";
+        return;
+    }
+
+    if (previewMode !== mode) {
+        buildingPreview.innerHTML = building.innerHTML;
+        buildingPreview.style.backgroundImage =
+            getComputedStyle(building).backgroundImage;
+
+        previewMode = mode;
+    }
+
+    const rect = placementMap.getBoundingClientRect();
+    const clickX = event.clientX - rect.left -
+        placementMap.clientLeft + placementMap.scrollLeft;
+    const clickY = event.clientY - rect.top -
+        placementMap.clientTop + placementMap.scrollTop;
+
+    const gridSize = 20;
+    const width = parseFloat(getComputedStyle(building).width);
+    const height = parseFloat(getComputedStyle(building).height);
+
+    const x = Math.round((clickX - width / 2) / gridSize) * gridSize;
+    const y = Math.round((clickY - height / 2) / gridSize) * gridSize;
+
+    buildingPreview.style.width = width + "px";
+    buildingPreview.style.height = height + "px";
+    buildingPreview.style.left = x + "px";
+    buildingPreview.style.top = y + "px";
+    buildingPreview.style.display = "block";
+
+    let valid = x >= 0 && y >= 0 &&
+        x + width <= placementMap.clientWidth &&
+        y + height <= placementMap.clientHeight;
+
+    const selectors =
+        ".house, .kitchen, .pond, .market, #hut1, #hut2, " +
+        "#smithy, #lumberyard, #warehouse, #coop, " +
+        ".tree, .rock, .fish, .stickman";
+
+    for (const other of placementMap.querySelectorAll(selectors)) {
+        if (other === building ||
+            getComputedStyle(other).display === "none") {
+            continue;
+        }
+
+        if (
+            x < other.offsetLeft + other.offsetWidth &&
+            x + width > other.offsetLeft &&
+            y < other.offsetTop + other.offsetHeight &&
+            y + height > other.offsetTop
+        ) {
+            valid = false;
+            break;
+        }
+    }
+
+    buildingPreview.classList.toggle("invalid", !valid);
+});
 </script>
 
 </body>
