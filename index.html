@@ -2793,7 +2793,8 @@ const clickX =
 
 const clickY =
     event.clientY - rect.top - map.clientTop + map.scrollTop;
-
+document.getElementById("message").textContent =
+    `Click position: X ${Math.round(clickX)}, Y ${Math.round(clickY)}`;
 // Snap the building's top-left corner to a 20px grid.
 const gridSize = 20;
 
