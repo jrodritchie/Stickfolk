@@ -32,7 +32,7 @@ h1 {
     position: relative;
     width: 100%;
     height: 700px;
-    overflow: hidden;
+    overflow: auto;
     box-sizing: border-box;
 }
 
@@ -447,14 +447,21 @@ button:disabled {
 /* V10 VISUAL VILLAGE MAP: decorative scenery only; game mechanics stay unchanged */
 .village-map {
     position: relative;
-    height: 540px;
-    min-height: 500px;
-    background: linear-gradient(180deg, #b9df91 0%, #d4e9a7 55%, #a8d17c 100%);
+    width: 100%;
+    min-width: 900px;
+    height: 700px;
+    min-height: 700px;
+    background: linear-gradient(
+        180deg,
+        #b9df91 0%,
+        #d4e9a7 55%,
+        #a8d17c 100%
+    );
     border-top: 5px solid #6f9b4c;
     border-bottom: 5px solid #6f9b4c;
     box-shadow: inset 0 0 0 5px rgba(255,255,255,.15);
+    box-sizing: border-box;
 }
-
 /* Nighttime village colours */
 .village-map.nighttime {
     background: linear-gradient(
@@ -582,7 +589,7 @@ button:disabled {
 
 <div class="resource-guide" id="resourceGuide" aria-live="polite">
   <b>📦 Resource Guide</b>
-  <div id="resourceGuideText">Gather wood, stone, and food to build up your village.</div>
+  "resourceGuideText">Gather wood, stone, and food to build up your village.</div>
 </div>
 
 <br><br>
