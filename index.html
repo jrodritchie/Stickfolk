@@ -2859,11 +2859,18 @@ for (const other of existingBuildings) {
 // Position the building where the player clicked.
 
 
-    building.style.position = "absolute";
-    building.style.left = x + "px";
-    building.style.top = y + "px";
-    building.style.display = "block";
+building.style.position = "absolute";
+building.style.left = x + "px";
+building.style.top = y + "px";
+building.style.display = "block";
 
+console.log("Building placement:", {
+    building: building.id,
+    x: x,
+    y: y,
+    actualTop: building.offsetTop,
+    mapScrollTop: map.scrollTop
+});
     // Charge resources only after placement succeeds.
     wood -= costWood;
     stone -= costStone;
