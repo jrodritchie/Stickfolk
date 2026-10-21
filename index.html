@@ -3054,6 +3054,7 @@ placementMap.addEventListener("mousemove", function(event) {
         ".tree, .rock, .fish, .stickman";
 
     for (const other of placementMap.querySelectorAll(selectors)) {
+        console.log("Preview checking:", other.id || other.className);
         if (other === building ||
             getComputedStyle(other).display === "none") {
             continue;
