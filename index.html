@@ -2331,12 +2331,12 @@ function updateLumberyardButtons() {
     if (!buildButton || !processButton) return;
 
     const unlocked = smithyBuilt && population >= 2;
-    buildButton.disabled = lumberyardBuilt || !unlocked || wood < 40 || stone < 25;
+    buildButton.disabled = lumberyardBuilt || !unlocked || wood < 50 || stone < 30;
     buildButton.textContent = lumberyardBuilt
         ? "🪵 Lumber Yard Built!"
         : (!unlocked
             ? "🔒 Build the Smithy and reach 2 villagers first"
-            : "🪵 Build Lumber Yard (40 Wood + 25 Stone)");
+            : "🪵 Build Lumber Yard (50 Wood + 30 Stone)");
 
     processButton.disabled = !lumberyardBuilt || wood < 10;
 
@@ -2346,8 +2346,8 @@ function updateLumberyardButtons() {
                 ? "🔒 Locked: build the Smithy first"
                 : (population < 2
                     ? "🔒 Locked: attract a second villager first"
-                    : (wood < 40 || stone < 25
-                        ? "Unlocked — gather 40 Wood + 25 Stone"
+                    : (wood < 50 || stone < 30
+                        ? "Unlocked — gather 50 Wood + 30 Stone"
                         : "Available to build!"));
     }
     processButton.textContent = lumberyardBuilt
