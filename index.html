@@ -2788,6 +2788,13 @@ if (!building) {
 
 
  // Get the clicked position relative to the map.
+    console.log("Click diagnostic:", {
+    clickClientY: event.clientY,
+    rectTop: rect.top,
+    mapClientTop: map.clientTop,
+    clickPageY: event.pageY,
+    windowScrollY: window.scrollY
+});
 const clickX =
     event.clientX - rect.left - map.clientLeft + map.scrollLeft;
 
