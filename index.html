@@ -2845,8 +2845,21 @@ for (const other of existingBuildings) {
     wood -= costWood;
     stone -= costStone;
 
-    if (isLumberyard) {
-        lumberyardBuilt = true;
+   
+if (isWarehouse) {
+    warehouseBuilt = true;
+    warehouseLevel = 1;
+    storageCapacity = baseStorageCapacity + warehouseStorageBonus;
+
+    document.getElementById("warehouseStatus").textContent =
+        "📦 Warehouse built! Storage is available.";
+
+    document.getElementById("message").textContent =
+        `📦 The Warehouse is built! Each stored resource can now hold ${storageCapacity}.`;
+
+} else if (isLumberyard) {
+    lumberyardBuilt = true;
+
 
         document.getElementById("lumberyardStatus").textContent =
             "Ready to process wood into lumber!";
@@ -2889,7 +2902,7 @@ for (const other of existingBuildings) {
     updateHut2Button();
     updateSmithyButtons();
     updateLumberyardButtons();
-
+    updateWarehouseButtons();
 });
 
 
