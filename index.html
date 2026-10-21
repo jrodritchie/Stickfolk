@@ -2355,6 +2355,25 @@ function updateLumberyardButtons() {
         : "🔒 Build the Lumber Yard first";
 }
 
+function processLumber() {
+    if (!lumberyardBuilt || wood < 10) {
+        document.getElementById("message").textContent =
+            !lumberyardBuilt
+                ? "🔒 Build the Lumber Yard first."
+                : "🪵 You need 10 wood to process lumber.";
+        return;
+    }
+
+    wood -= 10;
+    lumber += 5;
+
+    document.getElementById("message").textContent =
+        "🪵 You processed 10 wood into 5 lumber!";
+
+    updateResources();
+    updateLumberyardButtons();
+}
+
 
 function buildLumberyard() {
 
