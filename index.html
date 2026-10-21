@@ -704,7 +704,7 @@ button:disabled {
 
 <div class="house" role="img" aria-label="Village house"></div>
 
-<div class="coop" role="img" aria-label="Chicken coop"></div>
+<div class="coop" id="coop" role="img" aria-label="Chicken coop"></div>
 
 <div class="kitchen" role="img" aria-label="Village kitchen"></div>
 
@@ -1406,22 +1406,28 @@ function updateCoopBuildButton() {
     }
 }
 
+
 function buildCoop() {
-    if (coopBuilt || !lumberyardBuilt || population < 2 || lumber < 20 || wood < 10) {
+    if (
+        coopBuilt ||
+        !lumberyardBuilt ||
+        population < 2 ||
+        lumber < 20 ||
+        wood < 10
+    ) {
         updateCoopBuildButton();
         return;
     }
 
-    lumber -= 20;
-    wood -= 10;
-    coopBuilt = true;
-    chickenCount = 1;
-    coopLevel = 1;
-    document.querySelector(".coop").style.display = "block";
-    document.getElementById("coopStatus").textContent = "Needs food";
+    window.placementMode = "coop";
+
+    document.getElementById("placementStatus").textContent =
+        "🐔 Choose a spot for your Chicken Coop, or press Escape to cancel.";
+
+    document.getElementById("placementStatus").style.display = "block";
+
     document.getElementById("message").textContent =
-        "🐔 The Chicken Coop is built! Your first chicken is ready to be fed.";
-    updateResources();
+        "🐔 Click an open spot on the map to place your Chicken Coop.";
 }
 
 /* CHICKEN */
@@ -2714,8 +2720,9 @@ document.getElementById("game").addEventListener("click", function(event) {
     mode !== "firstHouse" &&
     mode !== "secondHouse" &&
     mode !== "smithy" &&
-    mode !== "lumberyard" &&
-    mode !== "warehouse"
+   mode !== "lumberyard" &&
+   mode !== "warehouse" &&
+   mode !== "coop"
 ) {
     return;
 }
@@ -2726,23 +2733,33 @@ document.getElementById("game").addEventListener("click", function(event) {
     }
 
     
+
 const isSecondHouse = mode === "secondHouse";
 const isSmithy = mode === "smithy";
 const isLumberyard = mode === "lumberyard";
 const isWarehouse = mode === "warehouse";
+const isCoop = mode === "coop";
+
 
 const costWood = isWarehouse ? 30 :
+    (isCoop ? 10 :
     (isLumberyard ? 40 :
-    (isSmithy ? 30 : (isSecondHouse ? 25 : 20)));
+    (isSmithy ? 30 : (isSecondHouse ? 25 : 20))));
 
 const costStone = isWarehouse ? 15 :
     (isLumberyard ? 25 :
-    (isSmithy ? 20 : (isSecondHouse ? 15 : 10)));
+    (isSmithy ? 20 : (isSecondHouse ? 15 : 10))));
+
+const costLumber = isCoop ? 20 : 0;
 
 
-    if (wood < costWood || stone < costStone) {
+    if (
+    wood < costWood ||
+    stone < costStone ||
+    lumber < costLumber
+) {
         document.getElementById("message").textContent =
-            `You need ${costWood} wood and ${costStone} stone.`;
+            `You need ${costWood} wood, ${costStone} stone, and ${costLumber} lumber.`;
 
         window.placementMode = null;
         document.getElementById("placementStatus").style.display = "none";
@@ -2759,10 +2776,13 @@ const costStone = isWarehouse ? 15 :
     const rect = map.getBoundingClientRect();
 
     
-const elementId = isWarehouse ? "warehouse" :
+
+const elementId = isCoop ? "coop" :
+    (isWarehouse ? "warehouse" :
     (isLumberyard ? "lumberyard" :
     (isSmithy ? "smithy" :
-    (isSecondHouse ? "hut2" : "hut1")));
+    (isSecondHouse ? "hut2" : "hut1"))));
+
 
 
     const building = document.getElementById(elementId);
@@ -2872,9 +2892,20 @@ console.log("Building placement:", {
     // Charge resources only after placement succeeds.
     wood -= costWood;
     stone -= costStone;
+    lumber -= costLumber;
 
    
-if (isWarehouse) {
+if (isCoop) {
+    coopBuilt = true;
+    chickenCount = 1;
+    coopLevel = 1;
+
+    document.getElementById("coopStatus").textContent = "Needs food";
+
+    document.getElementById("message").textContent =
+        "🐔 The Chicken Coop is built! Your first chicken is ready to be fed.";
+
+} else if (isWarehouse) {
     warehouseBuilt = true;
     warehouseLevel = 1;
     storageCapacity = baseStorageCapacity + warehouseStorageBonus;
@@ -2931,6 +2962,7 @@ if (isWarehouse) {
     updateSmithyButtons();
     updateLumberyardButtons();
     updateWarehouseButtons();
+    updateCoopBuildButton();
 });
 
 
