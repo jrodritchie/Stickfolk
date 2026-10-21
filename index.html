@@ -2389,11 +2389,11 @@ function buildLumberyard() {
         return;
     }
 
-    if (wood < 40 || stone < 25) {
-        document.getElementById("lumberyardStatus").textContent =
-            "Need 40 Wood and 25 Stone to build it.";
-        return;
-    }
+    if (wood < 50 || stone < 30) {
+    document.getElementById("lumberyardStatus").textContent =
+        "Need 50 Wood and 30 Stone to build it.";
+    return;
+}
 
     // Start placement mode. Do not spend resources yet.
     window.placementMode = "lumberyard";
