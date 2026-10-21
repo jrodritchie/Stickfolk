@@ -2769,8 +2769,11 @@ if (!building) {
 
 
  // Get the clicked position relative to the map.
-const clickX = event.clientX - rect.left - map.clientLeft;
-const clickY = event.clientY - rect.top - map.clientTop;
+const clickX =
+    event.clientX - rect.left - map.clientLeft + map.scrollLeft;
+
+const clickY =
+    event.clientY - rect.top - map.clientTop + map.scrollTop;
 
 // Snap the building's top-left corner to a 20px grid.
 const gridSize = 20;
