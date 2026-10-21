@@ -814,7 +814,7 @@ Build your first house to attract another Stickfolk.
 <br>
 
 <button id="buildHut2Button" onclick="buildHut2()">
-🏠 Build Second House (25 Wood + 15 Stone)
+🏠 Build Second House (20 Wood + 10 Stone)
 </button>
 
 </div>
@@ -986,7 +986,7 @@ Status:
 id="buildSmithyButton"
 onclick="buildSmithy()">
 
-🔨 Build Smithy
+🔨 Build Smithy (30 Wood + 20 Stone)
 
 </button>
 
@@ -1036,7 +1036,7 @@ Status:
 <br>
 
 <button id="buildLumberyardButton" onclick="buildLumberyard()">
-🪵 Build Lumber Yard (40 Wood + 25 Stone)
+🪵 Build Lumber Yard (50 Wood + 30 Stone)
 </button>
 
 <button id="processLumberButton" onclick="processLumber()">
@@ -1401,11 +1401,11 @@ function updateCoopBuildButton() {
             ? "🔒 Locked: build the Lumber Yard first."
             : "🔒 Locked: attract a second villager first.";
     } else {
-        button.disabled = lumber < 20 || wood < 10;
-        button.textContent = "🐔 Build Chicken Coop (20 Lumber + 10 Wood)";
-        status.textContent = (lumber < 20 || wood < 10)
-            ? "Unlocked — gather 20 Lumber and 10 Wood."
-            : "Available to build!";
+        button.disabled = lumber < 15 || wood < 15;
+button.textContent = "🐔 Build Chicken Coop (15 Wood + 15 Lumber)";
+status.textContent = (lumber < 15 || wood < 15)
+    ? "Unlocked — gather 15 Wood and 15 Lumber."
+    : "Available to build!";
     }
 }
 
@@ -2415,12 +2415,12 @@ function updateWarehouseButtons() {
     if (!buildButton || !upgradeButton || !status) return;
 
     const unlocked = lumberyardBuilt && population >= 2;
-    buildButton.disabled = warehouseBuilt || !unlocked || wood < 30 || stone < 15;
+    buildButton.disabled = warehouseBuilt || !unlocked || wood < 40 || stone < 20;
     buildButton.textContent = warehouseBuilt
         ? "📦 Warehouse Built!"
         : (!unlocked
             ? "🔒 Build the Lumber Yard and reach 2 villagers first"
-            : "📦 Build Warehouse (30 Wood + 15 Stone)");
+            : "📦 Build Warehouse (40 Wood + 20 Stone)");
 
     upgradeButton.disabled = !warehouseBuilt || warehouseLevel >= maxWarehouseLevel || wood < 30 || stone < 15 || lumber < 10;
     upgradeButton.textContent = !warehouseBuilt
