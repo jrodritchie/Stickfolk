@@ -2847,11 +2847,12 @@ for (const other of existingBuildings) {
             "🏠 Your second house is ready for another Stickfolk.";
 
     } else {
-        hutBuilt = true;
+    hutBuilt = true;
+    populationCapacity = 2;
 
-        document.getElementById("message").textContent =
-            "🏠 Your first house is built!";
-    }
+    document.getElementById("message").textContent =
+        "🏠 Your first house is built! A new Stickfolk may move in soon.";
+}
 
     window.placementMode = null;
     document.getElementById("placementStatus").style.display = "none";
