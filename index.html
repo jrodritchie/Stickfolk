@@ -3048,24 +3048,41 @@ placementMap.addEventListener("mousemove", function(event) {
         x + width <= placementMap.clientWidth &&
         y + height <= placementMap.clientHeight;
 
+   
     const selectors =
         ".house, .kitchen, .pond, .market, #hut1, #hut2, " +
         "#smithy, #lumberyard, #warehouse, #coop, " +
         ".tree, .rock, .fish, .stickman";
 
     for (const other of placementMap.querySelectorAll(selectors)) {
-        console.log("Preview checking:", other.id || other.className);
-        if (other === building ||
-            getComputedStyle(other).display === "none") {
+        if (
+            other === building ||
+            getComputedStyle(other).display === "none"
+        ) {
             continue;
         }
 
-       const previewRect = {
-    left: x,
-    top: y,
-    right: x + width,
-    bottom: y + height
-};
+        const otherRect = other.getBoundingClientRect();
+        const mapRect = placementMap.getBoundingClientRect();
+
+        const otherLeft = otherRect.left - mapRect.left -
+            placementMap.clientLeft + placementMap.scrollLeft;
+        const otherTop = otherRect.top - mapRect.top -
+            placementMap.clientTop + placementMap.scrollTop;
+
+        if (
+            x < otherLeft + otherRect.width &&
+            x + width > otherLeft &&
+            y < otherTop + otherRect.height &&
+            y + height > otherTop
+        ) {
+            valid = false;
+            break;
+        }
+    }
+
+    buildingPreview.classList.toggle("invalid", !valid);
+});
 
 const otherRect = other.getBoundingClientRect();
 const mapRect = placementMap.getBoundingClientRect();
