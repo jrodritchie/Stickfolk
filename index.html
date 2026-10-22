@@ -3060,15 +3060,25 @@ placementMap.addEventListener("mousemove", function(event) {
             continue;
         }
 
-        if (
-            x < other.offsetLeft + other.offsetWidth &&
-            x + width > other.offsetLeft &&
-            y < other.offsetTop + other.offsetHeight &&
-            y + height > other.offsetTop
-        ) {
-            valid = false;
-            break;
-        }
+       const previewRect = {
+    left: x,
+    top: y,
+    right: x + width,
+    bottom: y + height
+};
+
+const otherRect = other.getBoundingClientRect();
+const mapRect = placementMap.getBoundingClientRect();
+
+const otherLeft = otherRect.left - mapRect.left - placementMap.clientLeft + placementMap.scrollLeft;
+const otherTop = otherRect.top - mapRect.top - placementMap.clientTop + placementMap.scrollTop;
+
+if (
+    previewRect.left < otherLeft + otherRect.width &&
+    previewRect.right > otherLeft &&
+    previewRect.top < otherTop + otherRect.height &&
+    previewRect.bottom > otherTop
+) {
     }
 
     buildingPreview.classList.toggle("invalid", !valid);
